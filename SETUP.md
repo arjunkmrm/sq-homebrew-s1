@@ -24,14 +24,7 @@ Save `.env`. You're ready for the next step.
 
 ## Step 2: start with the baseline
 
-Everyone starts with the same agent. Open `mini-tau3/agents/participant.ts`:
-
-```ts
-import type { ParticipantFactory } from "./banking.ts"
-
-export const createAgent: ParticipantFactory = (context) =>
-  context.defineAgent("participant")
-```
+Everyone starts with the same agent. Open `mini-tau3/agents/baseline/actor.ts`.
 
 This composes three things:
 
@@ -42,3 +35,16 @@ This composes three things:
 The composition is in `agents/baseline/actor.ts`; the system prompt is in `agents/baseline/components/instructions.ts`. Every task uses this same baseline. It contains no task-specific strategy or expected answers.
 
 Leave it unchanged for the first run. We'll measure the baseline before improving it.
+
+## Step 3: run the baseline
+
+```sh
+bun run run \
+  --cases task_093 \
+  --agent-file mini-tau3/agents/baseline/actor.ts \
+  --output runs/baseline
+```
+
+The task asks the agent to investigate missing savings interest. The runner creates a fresh bank and a simulated customer, then lets them interact.
+
+The result is saved to `runs/baseline/task_093.json`. Next, we'll inspect what happened before scoring it.
