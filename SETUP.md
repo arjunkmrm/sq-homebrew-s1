@@ -5,8 +5,8 @@
 Requires **Bun 1.4+**.
 
 ```sh
-git clone https://github.com/arjunkmrm/workshop.git
-cd workshop
+git clone https://github.com/arjunkmrm/sq-homebrew-s1.git
+cd sq-homebrew-s1
 bun install --frozen-lockfile
 cp .env.example .env
 ```
@@ -21,7 +21,7 @@ OPENROUTER_API_KEY=your-openrouter-api-key
 The `openrouter:` prefix means you need an OpenRouter key, even when using an OpenAI model.
 
 ```text
-workshop/
+sq-homebrew-s1/
 ├── .env                         # API key and model
 ├── mini-tau3/
 │   ├── agents/baseline/
