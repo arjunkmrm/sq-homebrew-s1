@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/sierra-research/tau2-bench",
+  "commit": "2174a603f6d014ef94473ffa95957f6ce27100db",
+  "sha256": {
+    "task_056.json": "de7f742c5351d499b615718337379daa2cd528bea62a359f26c22e5acce0fba4",
+    "task_060.json": "bcedd99c906c7b7fcd9e1c27947b581df60db5ca40c830a721057fd5bd725613",
+    "task_062.json": "a56aed67f2f6af89eaf6c6e6848dc4626e6cb43c4d0f1866c8ef651ebcbbd481",
+    "task_072.json": "e7ee150ff2993e94c49d6c9345802bcc232fc174f33e6c9e897e689995a0c335",
+    "task_074.json": "d0d1f2a978556913cf9d8e1c86951ab2a871f7c4ccaed9f67eece8e625fe4d73",
+    "task_093.json": "7e507f9688766cab2ff5f247a549c154f59a5523f2b882056e1ba5666d7bcb80",
+    "task_094.json": "1506c44d139cf214b58d71729ddfdaf097d498703ba4d90c9546446dba526747",
+    "task_095.json": "5d45ac12d5ee411329b4f1c39c7bc7a64c3a24f46e47ee4223fe1821f726d4b3",
+    "task_096.json": "5524a004c5b1d3835cbce6251b4889accd2eac8a7a8be4e4158e5952992b97c9",
+    "task_097.json": "1b313370494a51d3e2c3184de3c4dda4db212ee64790d7152168f628d8adad8e",
+    "../environment/base-db.json": "e692feb797c659f0e21ff7380aa87beb4e95a0694d7bb7945f073102f0293d28"
+  }
+}

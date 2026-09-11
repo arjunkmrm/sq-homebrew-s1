@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "eval": "bun run mini-tau3/run.ts",
+    "challenge": "bun run mini-tau3/challenge.ts",
     "score": "bun run scripts/score.ts",
     "check": "bun run --cwd mini-tau3 check"
   },

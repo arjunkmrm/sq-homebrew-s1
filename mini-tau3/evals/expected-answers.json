@@ -1,7 +1,0 @@
-{
-  "check-savings-balance": "Your savings account balance is $3,500.",
-  "transfer-between-own-accounts": "Transferred $500 from savings to checking. Your savings balance is now $3,000 and your checking balance is $1,750.",
-  "transfer-and-close-savings": "Transferred your full savings balance of $3,500 to checking and closed your savings account. Your checking balance is now $4,750 and your closed savings account has a zero balance.",
-  "close-savings": "Your savings account still has $3,500. Where would you like that money moved before I close the account? I have left your account open and made no changes.",
-  "transfer-over-balance": "I cannot transfer $4,000 because your savings account only has $3,500. No transfer was made; your savings balance remains $3,500 and your checking balance remains $1,250."
-}

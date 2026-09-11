@@ -1,7 +1,9 @@
 # Mini τ banking
 
-See the [setup guide](../README.md) to install dependencies and run a task.
+See the [setup guide](../README.md) to build and compare agents.
 
-`environment/`, `agents/`, `customer/`, and `tasks/` are shared. `evals/` contains expected answers, the response judge, and outcome checks. `rewards/` projects the execution log and scores outcomes, actions, time, and tokens.
+Both conventional evals and rewards use the same environment and saved run. Each attempt starts with fresh task state. The banking agent receives policy, tools, and customer messages; expected answers and scoring targets stay in the evaluator.
 
-The banking agent never receives the expected answers. Each run starts with fresh state and saves events and before/after snapshots. The harder interest task uses a scripted customer and deterministic checks instead of a response judge.
+Each task uses a separate customer agent. Its events are saved separately so its model usage does not count toward the banking agent's efficiency score.
+
+All ten task records declare `reward_basis: ["DB"]`: τ compares the database produced by reference actions with the agent's database. Our shared evaluator compares business state, while workshop rewards separately score verification/consent evidence and efficiency. Verification and discovery-log tables are excluded from our business-state comparison, so this is not an exact reproduction of the official DB hash reward.

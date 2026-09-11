@@ -1,31 +1,28 @@
-import type { BankState } from "./environment/bank/schema.ts"
-import type { evaluateState } from "./evals/state-checks.ts"
+import type { BankingAuditEntry, BankingDb } from "./environment/banking.ts"
 import type { Event } from "tardie/core/event"
 import type { Trajectory } from "./rewards/trajectory.ts"
-import type { AgentVersion } from "./agents/variant-info.ts"
 
-export type Query = {
-  id: string
-  customerId: string
-  initialState: string
-  request: string
-}
+export type CustomerConsent = { openAccounts: boolean; transfers: boolean; closeAccounts: boolean; credits: boolean; reports: boolean }
+export type CustomerTurn = { text: string; afterToolSeq: number; consent?: CustomerConsent }
 
 export type ModelRef = { provider: string; model_id: string }
+export type StateChecks = { pass: boolean; checks: Array<{ name: string; pass: boolean; detail: string }> }
 
 export type CaseRun = {
   id: string
-  agentVersion: AgentVersion
+  agentVersion: string
   request: string
   status: "judged" | "error"
   finalAnswer?: string
-  judgment?: { pass: boolean; score: number; rationale: string; scope: "response-only" }
-  stateChecks: ReturnType<typeof evaluateState>
-  error?: { stage: "agent" | "judge"; message: string }
+  stateChecks: StateChecks
+  error?: { stage: "agent"; message: string }
   events: Event[]
   trajectory: Trajectory
-  stateBefore: BankState
-  stateAfter: BankState
+  audit?: BankingAuditEntry[]
+  customerTurns?: CustomerTurn[]
+  customerEvents?: Event[]
+  stateBefore: BankingDb
+  stateAfter: BankingDb
   startedAt: string
   finishedAt: string
 }
