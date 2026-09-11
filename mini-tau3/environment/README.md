@@ -1,6 +1,6 @@
 # Upstream fidelity
 
-The canonical banking state and tool behavior in `banking.ts` are a TypeScript workshop port of Sierra Research's tau2-bench banking knowledge environment at commit `2174a603f6d014ef94473ffa95957f6ce27100db` (retrieved September 11, 2026).
+The canonical banking environment is a TypeScript workshop port of Sierra Research's tau2-bench banking knowledge environment at commit `2174a603f6d014ef94473ffa95957f6ce27100db` (retrieved September 11, 2026). `banking.ts` owns fresh state, reset, snapshots, and audit entries; `tools.ts` implements the banking-tool surface. Shared state types live in `types.ts` to keep the composition and tools independent at runtime.
 
 The table envelope follows `data_model.py`. Relevant argument validation, string results, mutations, fixed clock, and deterministic IDs follow `tools.py`, `db_query.py`, and `utils.py`. The port currently covers the common identity tools and the discoverable account, transaction, transfer, opening, closure, checking-credit, savings-credit, and interest-report tools used by the included workshop tasks. It is not the complete upstream Python toolkit and does not produce an official tau-bench score.
 

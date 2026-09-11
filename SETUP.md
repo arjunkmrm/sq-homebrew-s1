@@ -27,7 +27,7 @@ sq-homebrew-s1/
 │   ├── agents/baseline/
 │   │   ├── actor.ts             # Agent composition
 │   │   └── components/          # System prompt and tools
-│   ├── environment/            # Bank state, tools, and policy documents
+│   ├── environment/            # Banking lifecycle, tool implementations, and policy documents
 │   │   └── customer/           # Simulated customer agent
 │   ├── tasks/                  # Ten banking tasks
 │   ├── inspector/              # React event viewer
