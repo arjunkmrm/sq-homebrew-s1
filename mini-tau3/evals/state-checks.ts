@@ -1,4 +1,4 @@
-import type { Account, BankState } from "../bank/schema.ts"
+import type { Account, BankState } from "../environment/bank/schema.ts"
 
 export type StateCheck = {
   name: string

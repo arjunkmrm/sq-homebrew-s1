@@ -1,7 +1,7 @@
 import { Effect } from "effect"
 import { tool } from "tardie/agent"
-import { createBankState } from "../../../bank/state.ts"
-import { createBankTools } from "../../../bank/tools.ts"
+import { createBankState } from "../../../environment/bank/state.ts"
+import { createBankTools } from "../../../environment/bank/tools.ts"
 
 export type Bank = ReturnType<typeof createBankState>
 

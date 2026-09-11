@@ -7,14 +7,18 @@ import { bunModelServices } from "tardie/server/model-services"
 import { createBunHost, hostBackend } from "tardie/bun/create-host"
 import { createAgentVersion } from "./agents/versions.ts"
 import { isAgentVersion, type AgentVersion } from "./agents/variant-info.ts"
-import { createBankState, loadSeedState } from "./bank/state.ts"
-import { judgeActor, judgePrompt, parseJudgment } from "./eval/judge.ts"
-import { evaluateState } from "./eval/state-checks.ts"
-import type { CaseRun, ModelRef, Query } from "./eval/types.ts"
+import { createBankState, loadSeedState } from "./environment/bank/state.ts"
+import { judgeActor, judgePrompt, parseJudgment } from "./evals/judge.ts"
+import { evaluateState } from "./evals/state-checks.ts"
+import type { CaseRun, ModelRef, Query } from "./types.ts"
 import type { Event } from "tardie/core/event"
 import { replayProjection } from "tardie/core/projection"
-import { trajectoryProjection } from "./projections/trajectory.ts"
-import { createInterestAgent, createInterestCustomer, createInterestEnvironment } from "./tasks/interest-investigation/index.ts"
+import { trajectoryProjection } from "./rewards/trajectory.ts"
+import { createInterestAgent } from "./agents/interest.ts"
+import { createInterestEnvironment } from "./environment/interest.ts"
+import { createInterestCustomer } from "./customer/interest.ts"
+import { interestSeed } from "./tasks/interest-investigation/seed.ts"
+import { interestScenario } from "./tasks/interest-investigation/scenario.ts"
 import { evaluateInterestState } from "./rewards/interest-run.ts"
 
 type Options = {
@@ -69,10 +73,11 @@ const providerConfig = (provider: string) => {
     openai: "https://api.openai.com/v1",
     openrouter: "https://openrouter.ai/api/v1",
   } as Record<string, string>)[provider]
-  const credential = process.env[`TAU3_${upper}_API_KEY_ENV`] ?? ({
+  const configuredCredential = process.env[`TAU3_${upper}_API_KEY_ENV`] ?? ({
     openai: "OPENAI_API_KEY",
     openrouter: "OPENROUTER_API_KEY",
   } as Record<string, string>)[provider]
+  const credential = configuredCredential === "MODEL_API_KEY" ? "TAU3_GATEWAY_KEY" : configuredCredential
   if (!baseUrl || !credential) throw new Error(`configure TAU3_${upper}_BASE_URL and TAU3_${upper}_API_KEY_ENV`)
   return { baseUrl, protocol: (provider === "bedrock" || provider === "amazon-bedrock") ? "bedrock-converse" : provider === "openai" ? "openai-responses" : "openai-chat-completions", env: [credential], ...((provider === "bedrock" || provider === "amazon-bedrock") ? { region: process.env.TAU3_BEDROCK_REGION ?? "us-east-1" } : {}) }
 }
@@ -80,11 +85,14 @@ const providerConfig = (provider: string) => {
 function runtimeEnv(options: Options): Record<string, string | undefined> {
   const models = [options.agentModel, options.judgeModel]
   const providers = Object.fromEntries([...new Set(models.map(({ provider }) => provider))].map((provider) => [provider, providerConfig(provider)]))
-  return {
+  const env: Record<string, string | undefined> = {
     ...process.env,
     TARDIGRADE_MODEL_CATALOG_LOAD_POLICY: process.env.TARDIGRADE_MODEL_CATALOG_LOAD_POLICY ?? "cache-first",
     TARDIGRADE_CONFIG: JSON.stringify({ models: { default: options.agentModel, allow: "*", providers } }),
   }
+  if (!env.TAU3_GATEWAY_KEY && process.env.MODEL_API_KEY) env.TAU3_GATEWAY_KEY = process.env.MODEL_API_KEY
+  for (const key of ["MODEL_BASE_URL", "MODEL_API_KEY", "MODEL_ID", "MODEL_PROVIDER"]) delete env[key]
+  return env
 }
 
 const errorMessage = (error: unknown) => error instanceof Error ? error.message : String(error)
@@ -96,7 +104,8 @@ const streamPacket = (packet: unknown) => {
 async function main() {
   const options = parseArgs(Bun.argv.slice(2))
   const queries = JSON.parse(await readFile(new URL("./tasks/queries.json", import.meta.url), "utf8")) as Query[]
-  const interestQuery: Query = { id: "task_097", customerId: "mc80w7k3x9", initialState: "interest-investigation", request: "Investigate and correct the interest discrepancies on all four savings accounts.", expectedAnswer: "" }
+  const expectedAnswers = JSON.parse(await readFile(new URL("./evals/expected-answers.json", import.meta.url), "utf8")) as Record<string, string>
+  const interestQuery: Query = { id: "task_097", customerId: "mc80w7k3x9", initialState: "interest-investigation", request: "Investigate and correct the interest discrepancies on all four savings accounts." }
   const available = [...queries, interestQuery]
   const selected = options.cases.length === 0 ? queries : available.filter(({ id }) => options.cases.includes(id))
   const unknown = options.cases.filter((id) => !available.some((query) => query.id === id))
@@ -120,9 +129,9 @@ async function main() {
   for (const query of selected) {
     if (query.id === "task_097") {
       const startedAt = new Date().toISOString()
-      const environment = createInterestEnvironment()
+      const environment = createInterestEnvironment(interestSeed)
       const stateBefore = environment.snapshot()
-      const customer = createInterestCustomer(environment)
+      const customer = createInterestCustomer(environment, interestScenario)
       const events: Event[] = []
       let finalAnswer: string | undefined
       let run: CaseRun
@@ -240,7 +249,7 @@ async function main() {
       let judgment
       try {
         const thread = await judgeHost.allocateRootThread({ instance: `judge-${query.id}`, name: "main" })
-        const output = await thread.methods.message({ text: judgePrompt(query.request, query.expectedAnswer, finalAnswer!), model: options.judgeModel }, { key: "judge", timeoutMs: options.timeoutMs })
+        const output = await thread.methods.message({ text: judgePrompt(query.request, expectedAnswers[query.id]!, finalAnswer!), model: options.judgeModel }, { key: "judge", timeoutMs: options.timeoutMs })
         judgment = parseJudgment(output)
       } finally {
         await judgeHost.close()

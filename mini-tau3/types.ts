@@ -1,15 +1,14 @@
-import type { BankState } from "../bank/schema.ts"
-import type { evaluateState } from "./state-checks.ts"
+import type { BankState } from "./environment/bank/schema.ts"
+import type { evaluateState } from "./evals/state-checks.ts"
 import type { Event } from "tardie/core/event"
-import type { Trajectory } from "../projections/trajectory.ts"
-import type { AgentVersion } from "../agents/variant-info.ts"
+import type { Trajectory } from "./rewards/trajectory.ts"
+import type { AgentVersion } from "./agents/variant-info.ts"
 
 export type Query = {
   id: string
   customerId: string
   initialState: string
   request: string
-  expectedAnswer: string
 }
 
 export type ModelRef = { provider: string; model_id: string }

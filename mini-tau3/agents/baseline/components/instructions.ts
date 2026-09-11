@@ -1,6 +1,6 @@
 import { system } from "tardie/agent"
 
-const policy = await Bun.file(new URL("../../../bank/policy.md", import.meta.url)).text()
+const policy = await Bun.file(new URL("../../../environment/bank/policy.md", import.meta.url)).text()
 
 const instructions = `
 You are a banking assistant for the authenticated customer.

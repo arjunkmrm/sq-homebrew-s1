@@ -1,5 +1,5 @@
 import { scoreTransferRun, type TransferRun } from "./transfer-run.ts"
-import type { StateCheck } from "../eval/state-checks.ts"
+import type { StateCheck } from "../evals/state-checks.ts"
 
 export type EfficiencyWeights = {
   completion: number

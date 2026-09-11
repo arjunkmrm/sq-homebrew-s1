@@ -1,4 +1,4 @@
-import type { StateCheck } from '../eval/state-checks.ts'
+import type { StateCheck } from '../evals/state-checks.ts'
 import type { TransferRun } from './transfer-run.ts'
 import { measureRunPerformance } from './efficient-run.ts'
 

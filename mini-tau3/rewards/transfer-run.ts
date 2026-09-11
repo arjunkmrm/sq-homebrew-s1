@@ -1,7 +1,7 @@
 import type { Event } from "tardie/core/event"
-import type { BankState } from "../bank/schema.ts"
-import { evaluateState, type StateCheck } from "../eval/state-checks.ts"
-import { trajectoryProjection } from "../projections/trajectory.ts"
+import type { BankState } from "../environment/bank/schema.ts"
+import { evaluateState, type StateCheck } from "../evals/state-checks.ts"
+import { trajectoryProjection } from "./trajectory.ts"
 export type RewardWeights = { completion: number; call: number }
 export const defaultWeights: RewardWeights = { completion: 10, call: -0.5 }
 
