@@ -83,3 +83,21 @@ bun run cli score runs/baseline/task_093.json
 Open `mini-tau3/rewards/banking.ts`. The reward uses the same outcome check, then considers verification, consent, rejected operations, tool calls, time, and tokens.
 
 Compare `total`, `completed`, and `checks` with the eval result. Both commands read the saved log; neither reruns the agent. Two runs can reach the same final state and receive different rewards.
+
+## Step 7: beat the baseline across all 10 tasks
+
+Copy the baseline, then edit your agent's prompt, tools, or composition:
+
+```sh
+cp -R mini-tau3/agents/baseline mini-tau3/agents/my-agent
+
+bun run cli challenge \
+  --agents mini-tau3/agents/baseline/actor.ts,mini-tau3/agents/my-agent/actor.ts \
+  --cases all \
+  --trials 1 \
+  --output runs/challenge-1
+```
+
+Read `runs/challenge-1/leaderboard.json`. Highest `averageReward` wins; `successful` shows how many tasks completed. Every attempt counts, and missing scores count as zero.
+
+Keep the models, tasks, environment, and reward fixed while improving your agent. Inspect weak runs, change your agent, and repeat with a new output folder. For a more reliable comparison, use `--trials 3` (30 runs per agent).
