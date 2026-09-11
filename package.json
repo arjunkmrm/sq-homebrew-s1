@@ -1,0 +1,12 @@
+{
+  "name": "reward-functions-workshop",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "bun run scripts/setup.ts",
+    "dev": "bun run --cwd slides dev",
+    "build": "bun run --cwd slides build",
+    "check": "bun run --cwd mini-tau3 check && bun test slides/tests && bun run build"
+  },
+  "engines": { "bun": ">=1.4.0" }
+}

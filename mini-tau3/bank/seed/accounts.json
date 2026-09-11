@@ -1,0 +1,34 @@
+[
+  {
+    "id": "account_alex_checking",
+    "customerId": "customer_alex",
+    "type": "checking",
+    "balanceCents": 125000,
+    "currency": "USD",
+    "status": "open"
+  },
+  {
+    "id": "account_alex_savings",
+    "customerId": "customer_alex",
+    "type": "savings",
+    "balanceCents": 350000,
+    "currency": "USD",
+    "status": "open"
+  },
+  {
+    "id": "account_jordan_checking",
+    "customerId": "customer_jordan",
+    "type": "checking",
+    "balanceCents": 80000,
+    "currency": "USD",
+    "status": "open"
+  },
+  {
+    "id": "account_jordan_savings",
+    "customerId": "customer_jordan",
+    "type": "savings",
+    "balanceCents": 200000,
+    "currency": "USD",
+    "status": "open"
+  }
+]
