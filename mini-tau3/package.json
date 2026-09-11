@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "eval": "bun run run.ts",
-    "check": "bun test && tsc --noEmit"
+    "check": "bun test && tsc --noEmit",
+    "run": "bun run run.ts"
   }
 }

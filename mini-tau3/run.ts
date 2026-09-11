@@ -12,11 +12,11 @@ import { createBankingEnvironment } from "./environment/banking.ts"
 import type { CaseRun, ModelRef } from "./types.ts"
 import type { Event } from "tardie/core/event"
 import { replayProjection } from "tardie/core/projection"
-import { trajectoryProjection } from "./rewards/trajectory.ts"
+import { trajectoryProjection } from "./trajectory.ts"
 import { createInterestAgent, createInterestAgentContext, type ParticipantFactory } from "./agents/interest.ts"
 import { createCustomerAgent, parseCustomerReply } from "./customer/agent.ts"
-import { evaluateInterestState } from "./rewards/interest-run.ts"
-import { scoreBankingRun } from "./rewards/banking-run.ts"
+import { evaluateRun } from "./evals/evaluate.ts"
+import { buildReferenceOutcome } from "./evaluation/reference.ts"
 import { createBankingTaskSeed, getRequiredReadLogAllowlist, loadBankingTask, bankingTaskIds, type BankingTaskId } from "./tasks/index.ts"
 
 type Options = {
@@ -106,11 +106,6 @@ const streamPacket = (packet: unknown) => {
 }
 
 const participantName = (file: string) => basename(file).replace(/\.[^.]+$/, "")
-const bankingStateChecks = (task: ReturnType<typeof loadBankingTask>, run: Pick<CaseRun, "id" | "events" | "stateBefore" | "stateAfter" | "audit" | "customerTurns" | "status" | "error">) => {
-  if (task.id === "task_097") return evaluateInterestState(run.stateBefore, run.stateAfter, { audit: run.audit, customerTurns: run.customerTurns })
-  const score = scoreBankingRun(task, run)
-  return { pass: score.completed, checks: score.checks }
-}
 
 async function loadParticipant(file: string, environment: ReturnType<typeof createBankingEnvironment>, taskId: string) {
   const absolute = isAbsolute(file) ? file : resolve(process.cwd(), file)
@@ -151,6 +146,7 @@ async function main() {
   const startedAt = new Date().toISOString()
   const bankingTask = loadBankingTask(query.id as BankingTaskId)
   const environment = createBankingEnvironment(createBankingTaskSeed(bankingTask), { readLogAllowlist: getRequiredReadLogAllowlist(bankingTask) })
+  const reference = buildReferenceOutcome(bankingTask)
   const stateBefore = environment.snapshot()
   const customerScenario = {
     opening: "",
@@ -225,8 +221,8 @@ async function main() {
     run = {
       id: query.id, agentVersion, request: customerTurns[0]?.text ?? customerScenario.opening, status: "judged", finalAnswer,
       events, trajectory: replayProjection(trajectoryProjection, events), stateBefore, stateAfter,
-      stateChecks: bankingStateChecks(bankingTask, partial), audit, customerTurns, customerEvents, startedAt, finishedAt: new Date().toISOString(),
-    } as unknown as CaseRun
+      outcome: evaluateRun(bankingTask, partial, reference), audit, customerTurns, customerEvents, startedAt, finishedAt: new Date().toISOString(),
+    }
   } catch (error) {
     const stateAfter = environment.snapshot()
     const audit = environment.auditSnapshot()
@@ -235,15 +231,15 @@ async function main() {
     run = {
       id: query.id, agentVersion, request: customerTurns[0]?.text ?? customerScenario.opening, status: "error",
       error: runError, events, trajectory: replayProjection(trajectoryProjection, events),
-      stateBefore, stateAfter, stateChecks: bankingStateChecks(bankingTask, partial), audit, customerTurns, customerEvents, startedAt, finishedAt: new Date().toISOString(),
-    } as unknown as CaseRun
+      stateBefore, stateAfter, outcome: evaluateRun(bankingTask, partial, reference), audit, customerTurns, customerEvents, startedAt, finishedAt: new Date().toISOString(),
+    }
   }
   results.push(run)
   await writeFile(join(options.output, `${query.id}.json`), JSON.stringify(run, null, 2) + "\n")
 
   }
 
-  const passed = (run: CaseRun) => run.status === "judged" && run.stateChecks.pass
+  const passed = (run: CaseRun) => run.status === "judged" && run.outcome.pass
   const summary = {
     generatedAt: new Date().toISOString(),
     agentVersion: options.agentVersion,
@@ -254,7 +250,7 @@ async function main() {
       passed: results.filter(passed).length,
       failed: results.filter((run) => run.status === "judged" && !passed(run)).length,
       errors: results.filter((run) => run.status === "error").length,
-      statePassed: results.filter((run) => run.stateChecks.pass).length,
+      statePassed: results.filter((run) => run.outcome.pass).length,
     },
     cases: results,
   }

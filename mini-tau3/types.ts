@@ -1,12 +1,12 @@
+import type { StateEvaluation } from "./evaluation/outcome.ts"
 import type { BankingAuditEntry, BankingDb } from "./environment/banking.ts"
 import type { Event } from "tardie/core/event"
-import type { Trajectory } from "./rewards/trajectory.ts"
+import type { Trajectory } from "./trajectory.ts"
 
 export type CustomerConsent = { openAccounts: boolean; transfers: boolean; closeAccounts: boolean; credits: boolean; reports: boolean }
 export type CustomerTurn = { text: string; afterToolSeq: number; consent?: CustomerConsent }
 
 export type ModelRef = { provider: string; model_id: string }
-export type StateChecks = { pass: boolean; checks: Array<{ name: string; pass: boolean; detail: string }> }
 
 export type CaseRun = {
   id: string
@@ -14,7 +14,7 @@ export type CaseRun = {
   request: string
   status: "judged" | "error"
   finalAnswer?: string
-  stateChecks: StateChecks
+  outcome: StateEvaluation
   error?: { stage: "agent"; message: string }
   events: Event[]
   trajectory: Trajectory

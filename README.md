@@ -14,7 +14,8 @@ cp .env.example .env
 Set your API key and `TAU3_AGENT_MODEL` in `.env`. Edit [`mini-tau3/agents/participant.ts`](mini-tau3/agents/participant.ts), then run:
 
 ```sh
-bun run eval --cases task_097 --agent-file mini-tau3/agents/participant.ts --output runs/mine
+bun run run --cases task_097 --agent-file mini-tau3/agents/participant.ts --output runs/mine
+bun run eval runs/mine/task_097.json
 bun run score runs/mine/task_097.json
 ```
 
@@ -42,12 +43,14 @@ mini-tau3/
 ├── agents/       # Your agent and reference strategies
 ├── customer/     # Customer simulator
 ├── tasks/        # Ten task JSONs and their loader
-├── evals/        # Conventional answer and final-state checks
-├── rewards/      # Outcome, trajectory, time, and token scoring
+├── evaluation/   # Shared reference state and outcome evaluator
+├── evals/        # Pass/fail evaluation using that outcome
+├── rewards/      # Same outcome + trajectory, time, and token scoring
+├── trajectory.ts # Recorded events → trajectory
 ├── run.ts        # Run one agent and save its log
 └── challenge.ts  # Compare agents across repeated runs
 ```
 
-`bun run eval --list-tasks` lists the tasks without calling a model. `bun run check` checks types and the environment. The slides live separately.
+`bun run run --list-tasks` lists the tasks without calling a model. `bun run check` checks types and the environment. The slides live separately.
 
 The [banking environment](mini-tau3/environment/README.md) ports the relevant τ tool contracts; this workshop's customer, retrieval, and rewards are adaptations, not an official benchmark score.

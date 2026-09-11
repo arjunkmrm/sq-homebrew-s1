@@ -2,8 +2,26 @@
 
 See the [setup guide](../README.md) to build and compare agents.
 
-Both conventional evals and rewards use the same environment and saved run. Each attempt starts with fresh task state. The banking agent receives policy, tools, and customer messages; expected answers and scoring targets stay in the evaluator.
+```text
+evaluation/
+  reference.ts   # Task reference actions → expected state
+  outcome.ts     # Compare actual state with expected state
+evals/
+  evaluate.ts    # Return the shared outcome as pass/fail
+rewards/
+  banking-run.ts # Shared outcome + policy/trajectory/efficiency
+  performance.ts # Time, tokens, and reported cost
+  score.ts       # Evaluate a saved run, then reward it
+```
 
-Each task uses a separate customer agent. Its events are saved separately so its model usage does not count toward the banking agent's efficiency score.
+Every task uses the same outcome evaluator. `run.ts` saves its result as `outcome`. A conventional eval reads that success definition; the reward adds verification, consent, errors, and efficiency without defining success again. Offline evaluation and scoring recompute the outcome from the saved snapshots.
 
-All ten task records declare `reward_basis: ["DB"]`: τ compares the database produced by reference actions with the agent's database. Our shared evaluator compares business state, while workshop rewards separately score verification/consent evidence and efficiency. Verification and discovery-log tables are excluded from our business-state comparison, so this is not an exact reproduction of the official DB hash reward.
+```ts
+const outcome = evaluateRun(task, run)
+const passed = outcome.pass
+const score = scoreBankingRun(task, run, outcome)
+```
+
+`environment/`, `tasks/`, `agents/`, `customer/`, and `trajectory.ts` are shared. Each attempt starts with fresh task state. The banking agent receives policy, tools, and customer messages; expected states stay in the evaluator. Customer model events are saved separately from banking-agent events.
+
+The ten task records use τ's DB reward basis. Our outcome evaluator excludes verification and discovery bookkeeping tables; our reward checks policy evidence separately. These are workshop scores, not the official τ DB hash reward.

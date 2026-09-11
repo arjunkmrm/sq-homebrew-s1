@@ -2,6 +2,8 @@ import type { BankingDb, BankingRecord } from "../environment/banking.ts"
 
 export type StateCheck = { name: string; pass: boolean; detail: string }
 export type StateEvaluation = { pass: boolean; checks: StateCheck[]; matchedChanges: number; expectedChanges: number }
+export type ReferenceOutcome = { taskId: string; stateBefore: BankingDb; stateExpected: BankingDb }
+export type OutcomeRun = { id: string; stateBefore: unknown; stateAfter: unknown }
 
 const record = (value: unknown): Record<string, unknown> | undefined =>
   typeof value === "object" && value !== null && !Array.isArray(value) ? value as Record<string, unknown> : undefined
@@ -19,7 +21,7 @@ export function requireBankingDb(value: unknown, label: string): asserts value i
 }
 
 type Change = { table: string; id: string; expected: BankingRecord | undefined }
-export function referenceChanges(before: BankingDb, expected: BankingDb, ignoredTables = new Set<string>()): Change[] {
+function referenceChanges(before: BankingDb, expected: BankingDb, ignoredTables: Set<string>): Change[] {
   const tables = new Set([...Object.keys(before), ...Object.keys(expected)])
   return [...tables].filter(name => !ignoredTables.has(name)).flatMap(name => {
     const initialRows = before[name]?.data ?? {}, expectedRows = expected[name]?.data ?? {}
@@ -28,21 +30,23 @@ export function referenceChanges(before: BankingDb, expected: BankingDb, ignored
   })
 }
 
-/** evaluateState compares canonical final DB effects while ignoring only explicitly incidental tables. */
-export function evaluateState(before: unknown, after: unknown, expected: unknown, options: { ignoredTables?: Iterable<string> } = {}): StateEvaluation {
-  requireBankingDb(before, "stateBefore")
-  requireBankingDb(after, "stateAfter")
-  requireBankingDb(expected, "reference state")
-  const ignored = new Set(options.ignoredTables ?? [])
-  const changes = referenceChanges(before, expected, ignored)
+/** evaluateOutcome compares canonical DB effects and ignores only non-outcome bookkeeping tables. */
+export function evaluateOutcome(reference: ReferenceOutcome, run: OutcomeRun): StateEvaluation {
+  if (run.id !== reference.taskId) throw new Error("Run and reference task IDs must match.")
+  requireBankingDb(run.stateBefore, "stateBefore")
+  requireBankingDb(run.stateAfter, "stateAfter")
+  const stateBefore = run.stateBefore as BankingDb, stateAfter = run.stateAfter as BankingDb
+  if (!sameStateValue(stateBefore, reference.stateBefore)) throw new Error("Run initial state does not match the selected banking task.")
+  const ignored = new Set(["verification_history", "agent_discoverable_tools"])
+  const changes = referenceChanges(reference.stateBefore, reference.stateExpected, ignored)
   if (changes.length === 0) throw new Error("Reference state contains no expected database changes.")
-  const matched = changes.filter(change => sameStateValue(after[change.table]?.data?.[change.id], change.expected)).length
-  const tables = new Set([...Object.keys(expected), ...Object.keys(after)])
-  const exact = [...tables].filter(name => !ignored.has(name)).every(name => sameStateValue(after[name], expected[name]))
-  const checks: StateCheck[] = [{
-    name: "Reference database outcome",
+  const matched = changes.filter(change => sameStateValue(stateAfter[change.table]?.data?.[change.id], change.expected)).length
+  const tables = new Set([...Object.keys(reference.stateExpected), ...Object.keys(stateAfter)])
+  const exact = [...tables].filter(name => !ignored.has(name)).every(name => sameStateValue(stateAfter[name], reference.stateExpected[name]))
+  return {
     pass: exact,
-    detail: `${matched} of ${changes.length} expected record changes match; no extra task-state changes are allowed.`,
-  }]
-  return { pass: exact, checks, matchedChanges: matched, expectedChanges: changes.length }
+    checks: [{ name: "Reference database outcome", pass: exact, detail: `${matched} of ${changes.length} expected record changes match; no extra task-state changes are allowed.` }],
+    matchedChanges: matched,
+    expectedChanges: changes.length,
+  }
 }
