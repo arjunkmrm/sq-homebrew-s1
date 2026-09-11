@@ -1,5 +1,5 @@
-import type { Event } from "../../../tardigrade/packages/core/src/event.ts"
-import type { Projection } from "../../../tardigrade/packages/core/src/projection/projection.ts"
+import type { Event } from "tardie/core/event"
+import type { Projection } from "tardie/core/projection"
 
 export type TrajectoryMessage = {
   messageId?: string

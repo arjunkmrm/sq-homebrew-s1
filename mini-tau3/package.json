@@ -4,6 +4,6 @@
   "type": "module",
   "scripts": {
     "eval": "bun run run.ts",
-    "check": "bun test && ../../tardigrade/node_modules/.bin/tsc --noEmit"
+    "check": "bun test && tsc --noEmit"
   }
 }

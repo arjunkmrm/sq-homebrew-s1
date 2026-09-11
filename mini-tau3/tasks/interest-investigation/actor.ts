@@ -1,6 +1,6 @@
-import { Effect } from "../../../../tardigrade/node_modules/effect/dist/index.js"
-import { defineActor } from "../../../../tardigrade/packages/tardie/src/core.ts"
-import { agentMessageMethod, infer, outputValidateOnce, system, tool } from "../../../../tardigrade/packages/tardie/src/agent.ts"
+import { Effect } from "effect"
+import { defineActor } from "tardie/core"
+import { agentMessageMethod, infer, outputValidateOnce, system, tool } from "tardie/agent"
 import type { InterestEnvironment } from "./environment.ts"
 
 const instructions = system(`You are the Rho-Bank support agent in a workshop adaptation of a tau3 banking task. Conduct a natural multi-turn conversation.

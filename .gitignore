@@ -5,5 +5,5 @@ dist/
 .env.*
 !.env.example
 .tardigrade/
-mini-tau3/runs/
+runs/
 *.log

@@ -1,5 +1,5 @@
-import { defineActor } from "../../../tardigrade/packages/tardie/src/core.ts"
-import { agentMessageMethod, infer, outputValidateOnce, system } from "../../../tardigrade/packages/tardie/src/agent.ts"
+import { defineActor } from "tardie/core"
+import { agentMessageMethod, infer, outputValidateOnce, system } from "tardie/agent"
 import { createBaselineAgent } from "./baseline/actor.ts"
 import { createBankToolBindings, type Bank } from "./baseline/components/bank-tools.ts"
 import { systemInstructions } from "./baseline/components/instructions.ts"

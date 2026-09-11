@@ -7,21 +7,11 @@
     "skipLibCheck": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
-    "types": ["bun"],
-    "typeRoots": ["../../tardigrade/node_modules/@types"],
-    "paths": {
-      "effect": ["../../tardigrade/node_modules/effect/dist/index.d.ts"],
-      "effect/*": ["../../tardigrade/node_modules/effect/dist/*"],
-      "tardie/*": ["../../tardigrade/packages/tardie/src/*"],
-      "@clavia/tardigrade-agent/*": ["../../tardigrade/packages/agent/src/*"],
-      "@clavia/tardigrade-browser/*": ["../../tardigrade/platform/browser/src/*"],
-      "@clavia/tardigrade-bun/*": ["../../tardigrade/platform/bun/src/*"],
-      "@clavia/tardigrade-code/*": ["../../tardigrade/packages/code/src/*"],
-      "@clavia/tardigrade-core/*": ["../../tardigrade/packages/core/src/*"],
-      "@clavia/tardigrade-host/*": ["../../tardigrade/packages/host/src/*"],
-      "@clavia/tardigrade-http/*": ["../../tardigrade/packages/http/src/*"],
-      "@clavia/tardigrade-model/*": ["../../tardigrade/packages/model/src/*"]
-    }
+    "types": [
+      "bun"
+    ]
   },
-  "include": ["**/*.ts"]
+  "include": [
+    "**/*.ts"
+  ]
 }

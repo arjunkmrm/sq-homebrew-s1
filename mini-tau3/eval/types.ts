@@ -1,6 +1,6 @@
 import type { BankState } from "../bank/schema.ts"
 import type { evaluateState } from "./state-checks.ts"
-import type { Event } from "../../../tardigrade/packages/core/src/event.ts"
+import type { Event } from "tardie/core/event"
 import type { Trajectory } from "../projections/trajectory.ts"
 import type { AgentVersion } from "../agents/variant-info.ts"
 

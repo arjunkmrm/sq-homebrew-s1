@@ -1,4 +1,4 @@
-import type { Event } from "../../../tardigrade/packages/core/src/event.ts"
+import type { Event } from "tardie/core/event"
 import type { BankState } from "../bank/schema.ts"
 import { evaluateState, type StateCheck } from "../eval/state-checks.ts"
 import { trajectoryProjection } from "../projections/trajectory.ts"

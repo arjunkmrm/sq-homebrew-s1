@@ -1,5 +1,5 @@
-import { Effect } from "../../../../../tardigrade/node_modules/effect/dist/index.js"
-import { tool } from "../../../../../tardigrade/packages/tardie/src/agent.ts"
+import { Effect } from "effect"
+import { tool } from "tardie/agent"
 import { createBankState } from "../../../bank/state.ts"
 import { createBankTools } from "../../../bank/tools.ts"
 

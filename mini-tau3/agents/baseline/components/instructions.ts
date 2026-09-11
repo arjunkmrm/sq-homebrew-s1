@@ -1,4 +1,4 @@
-import { system } from "../../../../../tardigrade/packages/tardie/src/agent.ts"
+import { system } from "tardie/agent"
 
 const policy = await Bun.file(new URL("../../../bank/policy.md", import.meta.url)).text()
 
