@@ -21,3 +21,24 @@ OPENROUTER_API_KEY=your-openrouter-api-key
 `TAU3_AGENT_MODEL` selects the model your agent uses. The `openrouter:` prefix sends requests through OpenRouter, so this configuration needs an **OpenRouter key**, not an OpenAI key—even though the selected model is from OpenAI.
 
 Save `.env`. You're ready for the next step.
+
+## Step 2: start with the baseline
+
+Everyone starts with the same agent. Open `mini-tau3/agents/participant.ts`:
+
+```ts
+import type { ParticipantFactory } from "./banking.ts"
+
+export const createAgent: ParticipantFactory = (context) =>
+  context.defineAgent("participant")
+```
+
+This composes three things:
+
+- A short system prompt: help the customer and follow the bank's policies.
+- Simple document search and a tool to read a full policy document.
+- Banking tools for identity lookup, verification, and discovering and calling banking operations.
+
+The composition is in `agents/baseline/actor.ts`; the system prompt is in `agents/baseline/components/instructions.ts`. Every task uses this same baseline. It contains no task-specific strategy or expected answers.
+
+Leave it unchanged for the first run. We'll measure the baseline before improving it.

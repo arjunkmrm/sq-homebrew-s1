@@ -3,10 +3,7 @@ import { defineActor } from "tardie/core"
 import { agentMessageMethod, infer, outputValidateOnce, system, tool } from "tardie/agent"
 import type { BankingEnvironment } from "../environment/banking.ts"
 
-const bankingInstructionText = `You are a Rho-Bank support agent. Conduct a natural conversation and use the supplied canonical tau banking tools.
-Identity lookup is part of verification. Verify identity before accessing account information or changing money. Search and retrieve primary policy documents instead of guessing. The corpus may mention discoverable tools: unlock them before invoking them through call_discoverable_agent_tool, and pass that tool's arguments as a JSON string.
-Never invent account IDs, balances, policies, tool results, or successful actions. Explain material findings and ask for customer consent before consequential changes. If a tool returns an error, do not claim success. When you need information or consent, ask the customer and stop so they can answer on the next turn.`
-export const bankingInstructions = system(bankingInstructionText)
+import { systemInstructions } from "./baseline/components/instructions.ts"
 
 const safe = (operation: () => unknown) => { try { return operation() } catch (error) { return `Error: ${error instanceof Error ? error.message : String(error)}` } }
 
@@ -31,7 +28,7 @@ export function createBankingToolBindings(environment: BankingEnvironment) {
 export function createBankingAgentContext(environment: BankingEnvironment, taskId: string) {
   const tools = createBankingToolBindings(environment)
   const output = outputValidateOnce
-  const instructions = bankingInstructions
+  const instructions = systemInstructions
   return {
     taskId, instructions, tools, output,
     defineAgent(name: string, additionalInstructions: ReturnType<typeof system>[] = []) {

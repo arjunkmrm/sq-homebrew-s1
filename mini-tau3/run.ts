@@ -13,7 +13,7 @@ import type { CaseRun, ModelRef } from "./types.ts"
 import type { Event } from "tardie/core/event"
 import { replayProjection } from "tardie/core/projection"
 import { trajectoryProjection } from "./trajectory.ts"
-import { createInterestAgent, createInterestAgentContext, type ParticipantFactory } from "./agents/interest.ts"
+import { createBankingAgentContext, type ParticipantFactory } from "./agents/banking.ts"
 import { createCustomerAgent, parseCustomerReply } from "./customer/agent.ts"
 import { evaluateRun } from "./evals/evaluate.ts"
 import { buildReferenceOutcome } from "./evaluation/reference.ts"
@@ -111,7 +111,7 @@ async function loadParticipant(file: string, environment: ReturnType<typeof crea
   const absolute = isAbsolute(file) ? file : resolve(process.cwd(), file)
   const module = await import(pathToFileURL(absolute).href) as { createAgent?: ParticipantFactory }
   if (typeof module.createAgent !== "function") throw new Error("agent file must export a createAgent(context) function")
-  return module.createAgent(createInterestAgentContext(environment, taskId))
+  return module.createAgent(createBankingAgentContext(environment, taskId))
 }
 
 async function main() {
@@ -162,7 +162,7 @@ async function main() {
   const agentVersion = options.agentFile ? participantName(options.agentFile) : options.agentVersion
   let run: CaseRun
   try {
-    const actor = options.agentFile ? await loadParticipant(options.agentFile, environment, query.id) : query.id === "task_097" ? createInterestAgent(options.agentVersion, environment, query.id) : createAgentVersion(options.agentVersion, environment, query.id)
+    const actor = options.agentFile ? await loadParticipant(options.agentFile, environment, query.id) : createAgentVersion(options.agentVersion, environment, query.id)
     const host = await createBunHost({ actor, storage: ":memory:", layersFor: () => layers })
     const customerHost = await createBunHost({ actor: createCustomerAgent(customerScenario), storage: ":memory:", layersFor: () => layers })
     let polling = true
