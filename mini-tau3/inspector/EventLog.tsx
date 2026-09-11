@@ -1,0 +1,4 @@
+import type { LogEvent } from './load-run'
+import './event-log.css'
+function preview(event:LogEvent) { const value=event.name??event.toolName??event.text??event.output??event.result??event.input??event.arguments??event.error??event.model??''; return (typeof value==='string'?value:JSON.stringify(value)).slice(0,180) }
+export function EventLog({events,empty='No events recorded.'}:{events:LogEvent[];empty?:string}) { return events.length ? <ol className="event-log-list">{events.map((event,index)=><li className="event-log-row" key={index}><details><summary><span className="event-log-index">{String(index+1).padStart(2,'0')}</span><span className="event-log-copy"><strong>{event.type}</strong><small>{preview(event)}</small></span></summary><pre>{JSON.stringify(event,null,2)}</pre></details></li>)}</ol> : <p className="event-log-empty">{empty}</p> }

@@ -15,6 +15,7 @@ Set your API key and `TAU3_AGENT_MODEL` in `.env`. Start with the shared [`basel
 
 ```sh
 bun run run --cases task_097 --agent-file mini-tau3/agents/baseline/actor.ts --output runs/mine
+bun run inspect runs/mine/task_097.json
 bun run eval runs/mine/task_097.json
 bun run score runs/mine/task_097.json
 ```
@@ -43,6 +44,7 @@ mini-tau3/
 ├── agents/       # Your agent and reference strategies
 ├── customer/     # Customer simulator
 ├── tasks/        # Ten task JSONs and their loader
+├── inspector/    # Local React event viewer
 ├── evaluation/   # Shared reference state and outcome evaluator
 ├── evals/        # Pass/fail evaluation using that outcome
 ├── rewards/      # Same outcome + trajectory, time, and token scoring

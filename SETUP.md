@@ -30,6 +30,7 @@ workshop/
 │   ├── environment/            # Bank state, tools, and policy documents
 │   ├── tasks/                  # Ten banking tasks
 │   ├── customer/               # Simulated customer agent
+│   ├── inspector/              # React event viewer
 │   ├── evaluation/             # Shared outcome checks
 │   ├── evals/                  # Pass/fail evaluation
 │   ├── rewards/                # Outcome, trajectory, and cost scoring
@@ -55,3 +56,11 @@ bun run run \
 ```
 
 The agent investigates missing savings interest with a simulated customer. The log is saved to `runs/baseline/task_093.json`.
+
+## Step 4: inspect the run
+
+```sh
+bun run inspect runs/baseline/task_093.json
+```
+
+Opens the React event viewer locally. Filter events, expand their JSON, or open another log. A `summary.json` lets you switch between runs. Press `Ctrl+C` to stop.

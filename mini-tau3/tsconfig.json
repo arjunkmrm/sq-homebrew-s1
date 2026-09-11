@@ -9,9 +9,11 @@
     "allowImportingTsExtensions": true,
     "types": [
       "bun"
-    ]
+    ],
+    "jsx": "react-jsx"
   },
   "include": [
-    "**/*.ts"
+    "**/*.ts",
+    "**/*.tsx"
   ]
 }
