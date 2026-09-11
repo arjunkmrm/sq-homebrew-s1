@@ -80,6 +80,6 @@ Open `mini-tau3/evals/evaluate.ts` to see the shared outcome check. This evaluat
 bun run cli score runs/baseline/task_093.json
 ```
 
-Open `mini-tau3/rewards/banking-run.ts`. The reward uses the same outcome check, then considers verification, consent, rejected operations, tool calls, time, and tokens.
+Open `mini-tau3/rewards/banking.ts`. The reward uses the same outcome check, then considers verification, consent, rejected operations, tool calls, time, and tokens.
 
 Compare `total`, `completed`, and `checks` with the eval result. Both commands read the saved log; neither reruns the agent. Two runs can reach the same final state and receive different rewards.

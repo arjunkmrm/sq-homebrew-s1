@@ -10,7 +10,7 @@ evaluation/
 evals/
   evaluate.ts    # Return the shared outcome as pass/fail
 rewards/
-  banking-run.ts # Shared outcome + policy/trajectory/efficiency
+  banking.ts     # Shared outcome + policy/trajectory/efficiency
   performance.ts # Time, tokens, and reported cost
   score.ts       # Evaluate a saved run, then reward it
 ```

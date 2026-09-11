@@ -1,4 +1,4 @@
-import { scoreBankingRun } from "./banking-run.ts"
+import { scoreBankingRun } from "./banking.ts"
 import { loadBankingTask, bankingTaskIds, type BankingTaskId } from "../tasks/index.ts"
 import type { CaseRun } from "../types.ts"
 import { evaluateRun } from "../evals/evaluate.ts"
