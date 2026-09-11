@@ -14,7 +14,7 @@ cp .env.example .env
 Add your **OpenRouter API key** to `.env`:
 
 ```env
-TAU3_AGENT_MODEL=openrouter:openai/gpt-5.1
+TAU3_AGENT_MODEL=openrouter:openai/gpt-5.6-terra
 OPENROUTER_API_KEY=your-openrouter-api-key
 ```
 
