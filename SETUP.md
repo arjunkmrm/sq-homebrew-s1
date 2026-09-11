@@ -63,3 +63,23 @@ bun run cli inspect runs/baseline/task_093.json
 ```
 
 Opens the React event viewer locally. Filter events, expand their JSON, or open another log. A `summary.json` lets you switch between runs. Press `Ctrl+C` to stop.
+
+## Step 5: evaluate the outcome
+
+```sh
+bun run cli eval runs/baseline/task_093.json
+```
+
+Read `pass` and the individual `checks`. The evaluator compares the agent's final bank state with the expected state produced by the task's reference actions.
+
+Open `mini-tau3/evals/evaluate.ts` to see the shared outcome check. This evaluation tells us whether the task succeeded; it does not inspect the path taken.
+
+## Step 6: score the trajectory
+
+```sh
+bun run cli score runs/baseline/task_093.json
+```
+
+Open `mini-tau3/rewards/banking-run.ts`. The reward uses the same outcome check, then considers verification, consent, rejected operations, tool calls, time, and tokens.
+
+Compare `total`, `completed`, and `checks` with the eval result. Both commands read the saved log; neither reruns the agent. Two runs can reach the same final state and receive different rewards.
