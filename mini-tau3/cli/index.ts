@@ -30,12 +30,12 @@ program
   .description("Compare agents across tasks and trials.")
   .option("--agents <files>", "comma-separated agent module paths")
   .option("--trials <count>", "trials per agent and task")
-  .option("--concurrency <count>", "maximum concurrent runs")
+  .option("--concurrency <count>", "maximum concurrent runs, 1–10 (default: 10)")
   .option("--output <dir>", "directory for challenge artifacts")
   .option("--model <provider:model>", "agent model")
   .option("--customer-model <provider:model>", "customer model")
   .option("--timeout-ms <milliseconds>", "total timeout per case")
-  .option("--cases <ids>", "comma-separated task ids, or all")
+  .option("--cases <ids>", "comma-separated task ids, or all (default: all)")
   .action(async (options: ChallengeCommandOptions) => challenge(toChallengeOptions(options)))
 
 program

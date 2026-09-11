@@ -32,17 +32,19 @@ Create your own agent file using the baseline composition, then:
 bun run cli challenge --agents mini-tau3/agents/baseline/actor.ts,mini-tau3/agents/my-agent.ts --cases all --trials 1
 ```
 
+By default, challenge runs all 10 tasks with 10 concurrent runs. Use `--concurrency` to lower parallelism.
+
 Use `--cases task_060,task_097` for a smaller set and `--trials 3` for repeated comparisons. See the [10-task guide](mini-tau3/tasks/README.md).
 
-Each attempt gets a fresh bank. The output folder contains individual logs and `leaderboard.json`: reward, completion, time, and tokens. Use the same agent and customer models for everyone's entries. These are trusted local agent files; the runner is not a submission sandbox.
+Each attempt gets a fresh bank. The output folder contains individual logs, `leaderboard.json`, and a self-contained `summary.json` tagged with the challenge run ID. Open it with `bun run cli inspect <output>/summary.json` to browse rankings, scores, and events. Use the same agent and customer models for everyone's entries. These are trusted local agent files; the runner is not a submission sandbox.
 
 ## Find your way
 
 ```text
 mini-tau3/
-├── environment/  # Shared τ-style bank tables, tools, and 698 policy documents
+├── environment/  # Bank state, tools, policies, and customer simulator
+│   └── customer/ # Simulated customer agent
 ├── agents/       # Your agent and reference strategies
-├── customer/     # Customer simulator
 ├── tasks/        # Ten task JSONs and their loader
 ├── inspector/    # Local React event viewer
 ├── evaluation/   # Shared reference state and outcome evaluator

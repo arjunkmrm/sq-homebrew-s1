@@ -23,6 +23,6 @@ const passed = outcome.pass
 const score = scoreBankingRun(task, run, outcome)
 ```
 
-`environment/`, `tasks/`, `agents/`, `customer/`, and `trajectory.ts` are shared. Each attempt starts with fresh task state. The banking agent receives policy, tools, and customer messages; expected states stay in the evaluator. Customer model events are saved separately from banking-agent events.
+`environment/` (including the customer), `tasks/`, `agents/`, and `trajectory.ts` are shared. Each attempt starts with fresh task state. The banking agent receives policy, tools, and customer messages; expected states stay in the evaluator. Customer model events are saved separately from banking-agent events.
 
 The ten task records use τ's DB reward basis. Our outcome evaluator excludes verification and discovery bookkeeping tables; our reward checks policy evidence separately. These are workshop scores, not the official τ DB hash reward.

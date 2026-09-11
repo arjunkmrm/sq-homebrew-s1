@@ -28,8 +28,8 @@ workshop/
 │   │   ├── actor.ts             # Agent composition
 │   │   └── components/          # System prompt and tools
 │   ├── environment/            # Bank state, tools, and policy documents
+│   │   └── customer/           # Simulated customer agent
 │   ├── tasks/                  # Ten banking tasks
-│   ├── customer/               # Simulated customer agent
 │   ├── inspector/              # React event viewer
 │   ├── evaluation/             # Shared outcome checks
 │   ├── evals/                  # Pass/fail evaluation
@@ -98,6 +98,16 @@ bun run cli challenge \
   --output runs/challenge-1
 ```
 
-Read `runs/challenge-1/leaderboard.json`. Highest `averageReward` wins; `successful` shows how many tasks completed. Every attempt counts, and missing scores count as zero.
+All 10 tasks run in parallel, each in a fresh environment. Use `--concurrency 5` to run fewer at once.
+
+Open the challenge results:
+
+```sh
+bun run cli inspect runs/challenge-1/summary.json
+```
+
+The summary records the challenge run ID, leaderboard, and every attempt's score and events. Select an agent/task/trial to inspect it. Individual logs remain in the challenge folder.
+
+`runs/challenge-1/leaderboard.json` contains just the rankings and challenge metadata. Highest `averageReward` wins; `successful` shows how many tasks completed. Every attempt counts, and missing scores count as zero.
 
 Keep the models, tasks, environment, and reward fixed while improving your agent. Inspect weak runs, change your agent, and repeat with a new output folder. For a more reliable comparison, use `--trials 3` (30 runs per agent).
