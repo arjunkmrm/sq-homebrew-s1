@@ -11,24 +11,24 @@ bun install --frozen-lockfile
 cp .env.example .env
 ```
 
-Set your API key and `TAU3_AGENT_MODEL` in `.env`. Edit [`mini-tau3/agents/participant.ts`](mini-tau3/agents/participant.ts), then run:
+Set your API key and `TAU3_AGENT_MODEL` in `.env`. Start with the shared [`baseline agent`](mini-tau3/agents/baseline/actor.ts):
 
 ```sh
-bun run run --cases task_097 --agent-file mini-tau3/agents/participant.ts --output runs/mine
+bun run run --cases task_097 --agent-file mini-tau3/agents/baseline/actor.ts --output runs/mine
 bun run eval runs/mine/task_097.json
 bun run score runs/mine/task_097.json
 ```
 
-The starter uses `context.defineAgent(...)`. For a custom actor, compose `context.instructions`, `context.tools`, and `context.output` with Tardie.
+The baseline composes `context.instructions`, `context.tools`, and `context.output` with Tardie.
 
 The customer is also an agent. Set `TAU3_CUSTOMER_MODEL` to keep its model fixed while changing banking models.
 
 ## Compare agents
 
-Copy the participant file to make another version, then:
+Create your own agent file using the baseline composition, then:
 
 ```sh
-bun run challenge --agents mini-tau3/agents/participant.ts,mini-tau3/agents/my-agent.ts --cases all --trials 1
+bun run challenge --agents mini-tau3/agents/baseline/actor.ts,mini-tau3/agents/my-agent.ts --cases all --trials 1
 ```
 
 Use `--cases task_060,task_097` for a smaller set and `--trials 3` for repeated comparisons. See the [10-task guide](mini-tau3/tasks/README.md).

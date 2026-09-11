@@ -1,6 +1,6 @@
 # Workshop setup
 
-## Step 1: install and configure
+## Step 1: set up
 
 Requires **Bun 1.4+**.
 
@@ -11,32 +11,41 @@ bun install --frozen-lockfile
 cp .env.example .env
 ```
 
-Open `.env` and add your **OpenRouter API key**:
+Add your **OpenRouter API key** to `.env`:
 
 ```env
 TAU3_AGENT_MODEL=openrouter:openai/gpt-5.1
 OPENROUTER_API_KEY=your-openrouter-api-key
 ```
 
-`TAU3_AGENT_MODEL` selects the model your agent uses. The `openrouter:` prefix sends requests through OpenRouter, so this configuration needs an **OpenRouter key**, not an OpenAI key—even though the selected model is from OpenAI.
+The `openrouter:` prefix means you need an OpenRouter key, even when using an OpenAI model.
 
-Save `.env`. You're ready for the next step.
+```text
+workshop/
+├── .env                         # API key and model
+├── mini-tau3/
+│   ├── agents/baseline/
+│   │   ├── actor.ts             # Agent composition
+│   │   └── components/          # System prompt and tools
+│   ├── environment/            # Bank state, tools, and policy documents
+│   ├── tasks/                  # Ten banking tasks
+│   ├── customer/               # Simulated customer agent
+│   ├── evaluation/             # Shared outcome checks
+│   ├── evals/                  # Pass/fail evaluation
+│   ├── rewards/                # Outcome, trajectory, and cost scoring
+│   ├── trajectory.ts           # Events → trajectory
+│   ├── run.ts                  # Run an agent
+│   └── challenge.ts            # Compare agents
+└── runs/                       # Generated logs and results
+```
 
-## Step 2: start with the baseline
+## Step 2: meet the baseline
 
-Everyone starts with the same agent. Open `mini-tau3/agents/baseline/actor.ts`.
+Open `mini-tau3/agents/baseline/actor.ts`.
 
-This composes three things:
+It combines a short system prompt, document search/read, and banking tools. Everyone starts with this same agent. Leave it unchanged for the first run.
 
-- A short system prompt: help the customer and follow the bank's policies.
-- Simple document search and a tool to read a full policy document.
-- Banking tools for identity lookup, verification, and discovering and calling banking operations.
-
-The composition is in `agents/baseline/actor.ts`; the system prompt is in `agents/baseline/components/instructions.ts`. Every task uses this same baseline. It contains no task-specific strategy or expected answers.
-
-Leave it unchanged for the first run. We'll measure the baseline before improving it.
-
-## Step 3: run the baseline
+## Step 3: run it
 
 ```sh
 bun run run \
@@ -45,6 +54,4 @@ bun run run \
   --output runs/baseline
 ```
 
-The task asks the agent to investigate missing savings interest. The runner creates a fresh bank and a simulated customer, then lets them interact.
-
-The result is saved to `runs/baseline/task_093.json`. Next, we'll inspect what happened before scoring it.
+The agent investigates missing savings interest with a simulated customer. The log is saved to `runs/baseline/task_093.json`.

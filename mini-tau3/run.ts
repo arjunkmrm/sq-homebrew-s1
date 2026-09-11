@@ -1,26 +1,23 @@
 import { mkdir, writeFile } from "node:fs/promises"
-import { basename, isAbsolute, join, resolve } from "node:path"
+import { basename, dirname, isAbsolute, join, resolve } from "node:path"
 import { pathToFileURL } from "node:url"
 import { modelAdapters } from "tardie/model/adapter"
 import { openAICompatibleAdapter } from "tardie/model/openai"
 import { bedrockAdapterForBun } from "tardie/model/bedrock"
 import { bunModelServices } from "tardie/server/model-services"
 import { createBunHost, hostBackend } from "tardie/bun/create-host"
-import { createAgentVersion } from "./agents/versions.ts"
-import { isAgentVersion, type AgentVersion } from "./agents/variant-info.ts"
+import { createBaselineAgent, createAgentContext, type AgentFactory } from "./agents/baseline/actor.ts"
 import { createBankingEnvironment } from "./environment/banking.ts"
 import type { CaseRun, ModelRef } from "./types.ts"
 import type { Event } from "tardie/core/event"
 import { replayProjection } from "tardie/core/projection"
 import { trajectoryProjection } from "./trajectory.ts"
-import { createBankingAgentContext, type ParticipantFactory } from "./agents/banking.ts"
 import { createCustomerAgent, parseCustomerReply } from "./customer/agent.ts"
 import { evaluateRun } from "./evals/evaluate.ts"
 import { buildReferenceOutcome } from "./evaluation/reference.ts"
 import { createBankingTaskSeed, getRequiredReadLogAllowlist, loadBankingTask, bankingTaskIds, type BankingTaskId } from "./tasks/index.ts"
 
 type Options = {
-  agentVersion: AgentVersion
   agentFile?: string
   agentModel: ModelRef
   customerModel: ModelRef
@@ -41,7 +38,7 @@ export function parseArgs(args: string[]): Options {
   const values = new Map<string, string>()
   let dryRun = false
   let listTasks = false
-  const allowed = new Set(["--agent-model", "--customer-model", "--agent-version", "--agent-file", "--cases", "--output", "--timeout-ms"])
+  const allowed = new Set(["--agent-model", "--customer-model", "--agent-file", "--cases", "--output", "--timeout-ms"])
   for (let index = 0; index < args.length; index++) {
     const arg = args[index]!
     if (arg === "--dry-run") { dryRun = true; continue }
@@ -56,10 +53,7 @@ export function parseArgs(args: string[]): Options {
   if (!listTasks && (!agent || !customer)) throw new Error("set agent and customer models as provider:model")
   const timeoutMs = Number(values.get("--timeout-ms") ?? process.env.TAU3_TIMEOUT_MS ?? 120_000)
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0) throw new Error("--timeout-ms must be a positive integer")
-  const agentVersion = values.get("--agent-version") ?? "baseline"
-  if (!isAgentVersion(agentVersion)) throw new Error(`unknown agent version ${JSON.stringify(agentVersion)}`)
   return {
-    agentVersion,
     agentFile: values.get("--agent-file"),
     agentModel: modelRef(agent ?? "offline:unused"),
     customerModel: modelRef(customer ?? "offline:unused"),
@@ -105,13 +99,13 @@ const streamPacket = (packet: unknown) => {
   if (process.env.TAU3_STREAM_EVENTS === "1") console.log(`${STREAM_PREFIX}${JSON.stringify(packet)}`)
 }
 
-const participantName = (file: string) => basename(file).replace(/\.[^.]+$/, "")
+const agentName = (file: string) => basename(file) === "actor.ts" ? basename(dirname(file)) : basename(file).replace(/\.[^.]+$/, "")
 
 async function loadParticipant(file: string, environment: ReturnType<typeof createBankingEnvironment>, taskId: string) {
   const absolute = isAbsolute(file) ? file : resolve(process.cwd(), file)
-  const module = await import(pathToFileURL(absolute).href) as { createAgent?: ParticipantFactory }
+  const module = await import(pathToFileURL(absolute).href) as { createAgent?: AgentFactory }
   if (typeof module.createAgent !== "function") throw new Error("agent file must export a createAgent(context) function")
-  return module.createAgent(createBankingAgentContext(environment, taskId))
+  return module.createAgent(createAgentContext(environment, taskId))
 }
 
 async function main() {
@@ -129,7 +123,7 @@ async function main() {
   if (selected.length === 0) throw new Error("no cases selected")
 
   if (options.dryRun) {
-    console.log(JSON.stringify({ valid: true, cases: selected.map(({ id }) => id), agentVersion: options.agentFile ? participantName(options.agentFile) : options.agentVersion, agentModel: options.agentModel, customerModel: options.customerModel }, null, 2))
+    console.log(JSON.stringify({ valid: true, cases: selected.map(({ id }) => id), agentVersion: options.agentFile ? agentName(options.agentFile) : "baseline", agentModel: options.agentModel, customerModel: options.customerModel }, null, 2))
     return
   }
 
@@ -159,10 +153,10 @@ async function main() {
   const events: Event[] = []
   const customerEvents: Event[] = []
   let finalAnswer: string | undefined
-  const agentVersion = options.agentFile ? participantName(options.agentFile) : options.agentVersion
+  const agentVersion = options.agentFile ? agentName(options.agentFile) : "baseline"
   let run: CaseRun
   try {
-    const actor = options.agentFile ? await loadParticipant(options.agentFile, environment, query.id) : createAgentVersion(options.agentVersion, environment, query.id)
+    const actor = options.agentFile ? await loadParticipant(options.agentFile, environment, query.id) : createBaselineAgent(environment, query.id)
     const host = await createBunHost({ actor, storage: ":memory:", layersFor: () => layers })
     const customerHost = await createBunHost({ actor: createCustomerAgent(customerScenario), storage: ":memory:", layersFor: () => layers })
     let polling = true
@@ -242,7 +236,7 @@ async function main() {
   const passed = (run: CaseRun) => run.status === "judged" && run.outcome.pass
   const summary = {
     generatedAt: new Date().toISOString(),
-    agentVersion: options.agentVersion,
+    agentVersion: "baseline",
     agentModel: options.agentModel,
     customerModel: options.customerModel,
     counts: {

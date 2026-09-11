@@ -26,7 +26,7 @@ function parseChallengeArgs(args: string[]): ChallengeOptions {
     if (value === undefined) throw new Error(`missing value for ${key}`)
     values.set(key, value)
   }
-  const defaultAgent = fileURLToPath(new URL("./agents/participant.ts", import.meta.url))
+  const defaultAgent = fileURLToPath(new URL("./agents/baseline/actor.ts", import.meta.url))
   const agents = (values.get("--agents") ?? defaultAgent).split(",").filter(Boolean).map(file => isAbsolute(file) ? file : resolve(process.cwd(), file))
   const trials = Number(values.get("--trials") ?? 1)
   const concurrency = Number(values.get("--concurrency") ?? 2)
