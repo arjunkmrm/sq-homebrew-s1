@@ -1,0 +1,560 @@
+{
+  "id": "transfer-between-own-accounts",
+  "request": "Move $500 from my savings to my checking.",
+  "status": "judged",
+  "finalAnswer": "I've transferred $500.00 from your savings to your checking account. Updated balances:\n\n- Savings: $3,000.00\n- Checking: $1,750.00",
+  "judgment": {
+    "pass": true,
+    "score": 1,
+    "rationale": "Candidate confirms the $500 transfer and matches the reference's updated balances exactly: savings $3,000 and checking $1,750.",
+    "scope": "response-only"
+  },
+  "events": [
+    {
+      "type": "ThreadCreated",
+      "address": {
+        "actor": "mini-tau3-baseline",
+        "instance": "transfer-between-own-accounts",
+        "thread": "main"
+      },
+      "depth": 0,
+      "at": 1789089804387,
+      "traceparent": "00-c9d019ddabe00622d23228d7fb63b024-b57f618429ad7413-01"
+    },
+    {
+      "type": "MessageReceived",
+      "id": "request",
+      "text": "Move $500 from my savings to my checking.",
+      "model": {
+        "provider": "amazon-bedrock",
+        "model_id": "global.anthropic.claude-sonnet-5"
+      },
+      "at": 1789089804390,
+      "call": {
+        "invocation": {
+          "method": "message",
+          "id": "request",
+          "epoch": 0
+        },
+        "deadlineAt": 1789089924390
+      },
+      "traceparent": "00-d63ab338327468003f7857b00fd23156-d791a72b186ab144-01"
+    },
+    {
+      "type": "ModelCalled",
+      "callId": "request/infer/0",
+      "model": {
+        "provider": "amazon-bedrock",
+        "model_id": "global.anthropic.claude-sonnet-5"
+      },
+      "ordinal": 0,
+      "turn": "request",
+      "at": 1789089804394
+    },
+    {
+      "type": "ModelReturned",
+      "callId": "request/infer/0",
+      "ordinal": 0,
+      "turn": "request",
+      "outcome": "returned",
+      "usage": {
+        "promptTokens": 1331,
+        "completionTokens": 49,
+        "totalTokens": 1380,
+        "costUsd": 0.003152,
+        "costSource": "table",
+        "estimatedCostUsd": 0.003152,
+        "provider": "amazon-bedrock",
+        "model": "global.anthropic.claude-sonnet-5",
+        "providerReports": [
+          {
+            "provider": "amazon-bedrock",
+            "model": "global.anthropic.claude-sonnet-5",
+            "providerSpecific": {
+              "inputTokens": 1331,
+              "outputTokens": 49,
+              "totalTokens": 1380
+            }
+          }
+        ]
+      },
+      "endpoint": {
+        "provider": "amazon-bedrock",
+        "model": "global.anthropic.claude-sonnet-5"
+      },
+      "at": 1789089807485,
+      "invocationRef": {
+        "method": "message",
+        "id": "request",
+        "epoch": 0
+      }
+    },
+    {
+      "type": "ToolCalled",
+      "callId": "tooluse_AOlAskb9wrX5H21xaO52pD",
+      "name": "list_accounts",
+      "arguments": {
+        "code": ""
+      },
+      "turn": "request",
+      "endpoint": {
+        "provider": "amazon-bedrock",
+        "model": "global.anthropic.claude-sonnet-5"
+      },
+      "at": 1789089807485,
+      "responseId": "request/infer/0",
+      "transitionRef": {
+        "seq": 2,
+        "component": "infer",
+        "tag": "infer"
+      },
+      "invocationRef": {
+        "method": "message",
+        "id": "request",
+        "epoch": 0
+      }
+    },
+    {
+      "type": "ToolReturned",
+      "callId": "tooluse_AOlAskb9wrX5H21xaO52pD",
+      "result": [
+        {
+          "id": "account_alex_checking",
+          "customerId": "customer_alex",
+          "type": "checking",
+          "balanceCents": 125000,
+          "currency": "USD",
+          "status": "open"
+        },
+        {
+          "id": "account_alex_savings",
+          "customerId": "customer_alex",
+          "type": "savings",
+          "balanceCents": 350000,
+          "currency": "USD",
+          "status": "open"
+        }
+      ],
+      "turn": "request",
+      "at": 1789089807489,
+      "transitionRef": {
+        "seq": 5,
+        "component": "agent.tools",
+        "tag": "answer"
+      },
+      "invocationRef": {
+        "method": "message",
+        "id": "request",
+        "epoch": 0
+      }
+    },
+    {
+      "type": "ModelCalled",
+      "callId": "request/infer/1",
+      "model": {
+        "provider": "amazon-bedrock",
+        "model_id": "global.anthropic.claude-sonnet-5"
+      },
+      "ordinal": 1,
+      "turn": "request",
+      "at": 1789089807490
+    },
+    {
+      "type": "ModelReturned",
+      "callId": "request/infer/1",
+      "ordinal": 1,
+      "turn": "request",
+      "outcome": "returned",
+      "usage": {
+        "promptTokens": 1492,
+        "completionTokens": 139,
+        "totalTokens": 1631,
+        "costUsd": 0.004373999999999999,
+        "costSource": "table",
+        "estimatedCostUsd": 0.004373999999999999,
+        "provider": "amazon-bedrock",
+        "model": "global.anthropic.claude-sonnet-5",
+        "providerReports": [
+          {
+            "provider": "amazon-bedrock",
+            "model": "global.anthropic.claude-sonnet-5",
+            "providerSpecific": {
+              "inputTokens": 1492,
+              "outputTokens": 139,
+              "totalTokens": 1631
+            }
+          }
+        ]
+      },
+      "endpoint": {
+        "provider": "amazon-bedrock",
+        "model": "global.anthropic.claude-sonnet-5"
+      },
+      "at": 1789089811227,
+      "invocationRef": {
+        "method": "message",
+        "id": "request",
+        "epoch": 0
+      }
+    },
+    {
+      "type": "ToolCalled",
+      "callId": "tooluse_r7tVa5qNLyiFQCcpfJJt62",
+      "name": "transfer",
+      "arguments": {
+        "sourceAccountId": "account_alex_savings",
+        "destinationAccountId": "account_alex_checking",
+        "amountCents": 50000
+      },
+      "turn": "request",
+      "endpoint": {
+        "provider": "amazon-bedrock",
+        "model": "global.anthropic.claude-sonnet-5"
+      },
+      "at": 1789089811227,
+      "responseId": "request/infer/1",
+      "transitionRef": {
+        "seq": 6,
+        "component": "infer",
+        "tag": "infer"
+      },
+      "invocationRef": {
+        "method": "message",
+        "id": "request",
+        "epoch": 0
+      }
+    },
+    {
+      "type": "ToolReturned",
+      "callId": "tooluse_r7tVa5qNLyiFQCcpfJJt62",
+      "result": {
+        "id": "transaction_1",
+        "sourceAccountId": "account_alex_savings",
+        "destinationAccountId": "account_alex_checking",
+        "amountCents": 50000,
+        "status": "completed"
+      },
+      "turn": "request",
+      "at": 1789089811229,
+      "transitionRef": {
+        "seq": 9,
+        "component": "agent.tools",
+        "tag": "answer"
+      },
+      "invocationRef": {
+        "method": "message",
+        "id": "request",
+        "epoch": 0
+      }
+    },
+    {
+      "type": "ModelCalled",
+      "callId": "request/infer/2",
+      "model": {
+        "provider": "amazon-bedrock",
+        "model_id": "global.anthropic.claude-sonnet-5"
+      },
+      "ordinal": 2,
+      "turn": "request",
+      "at": 1789089811230
+    },
+    {
+      "type": "ModelReturned",
+      "callId": "request/infer/2",
+      "ordinal": 2,
+      "turn": "request",
+      "outcome": "returned",
+      "usage": {
+        "promptTokens": 1675,
+        "completionTokens": 52,
+        "totalTokens": 1727,
+        "costUsd": 0.0038699999999999997,
+        "costSource": "table",
+        "estimatedCostUsd": 0.0038699999999999997,
+        "provider": "amazon-bedrock",
+        "model": "global.anthropic.claude-sonnet-5",
+        "providerReports": [
+          {
+            "provider": "amazon-bedrock",
+            "model": "global.anthropic.claude-sonnet-5",
+            "providerSpecific": {
+              "inputTokens": 1675,
+              "outputTokens": 52,
+              "totalTokens": 1727
+            }
+          }
+        ]
+      },
+      "endpoint": {
+        "provider": "amazon-bedrock",
+        "model": "global.anthropic.claude-sonnet-5"
+      },
+      "at": 1789089813847,
+      "invocationRef": {
+        "method": "message",
+        "id": "request",
+        "epoch": 0
+      }
+    },
+    {
+      "type": "TurnCompleted",
+      "output": "I've transferred $500.00 from your savings to your checking account. Updated balances:\n\n- Savings: $3,000.00\n- Checking: $1,750.00",
+      "attemptKey": "request/infer/2",
+      "endpoint": {
+        "provider": "amazon-bedrock",
+        "model": "global.anthropic.claude-sonnet-5"
+      },
+      "turn": "request",
+      "at": 1789089813847,
+      "transitionRef": {
+        "seq": 10,
+        "component": "infer",
+        "tag": "infer"
+      },
+      "invocationRef": {
+        "method": "message",
+        "id": "request",
+        "epoch": 0
+      }
+    }
+  ],
+  "trajectory": {
+    "messages": [
+      {
+        "messageId": "request",
+        "index": 1,
+        "role": "user",
+        "content": "Move $500 from my savings to my checking.",
+        "status": "received"
+      },
+      {
+        "attemptKey": "request/infer/2",
+        "index": 12,
+        "role": "assistant",
+        "content": "I've transferred $500.00 from your savings to your checking account. Updated balances:\n\n- Savings: $3,000.00\n- Checking: $1,750.00",
+        "status": "completed"
+      }
+    ],
+    "tools": [
+      {
+        "callId": "tooluse_AOlAskb9wrX5H21xaO52pD",
+        "name": "list_accounts",
+        "arguments": {
+          "code": ""
+        },
+        "callIndex": 4,
+        "status": "returned",
+        "unmatchedReturn": false,
+        "result": [
+          {
+            "id": "account_alex_checking",
+            "customerId": "customer_alex",
+            "type": "checking",
+            "balanceCents": 125000,
+            "currency": "USD",
+            "status": "open"
+          },
+          {
+            "id": "account_alex_savings",
+            "customerId": "customer_alex",
+            "type": "savings",
+            "balanceCents": 350000,
+            "currency": "USD",
+            "status": "open"
+          }
+        ],
+        "returnIndex": 5
+      },
+      {
+        "callId": "tooluse_r7tVa5qNLyiFQCcpfJJt62",
+        "name": "transfer",
+        "arguments": {
+          "sourceAccountId": "account_alex_savings",
+          "destinationAccountId": "account_alex_checking",
+          "amountCents": 50000
+        },
+        "callIndex": 8,
+        "status": "returned",
+        "unmatchedReturn": false,
+        "result": {
+          "id": "transaction_1",
+          "sourceAccountId": "account_alex_savings",
+          "destinationAccountId": "account_alex_checking",
+          "amountCents": 50000,
+          "status": "completed"
+        },
+        "returnIndex": 9
+      }
+    ]
+  },
+  "stateBefore": {
+    "customers": [
+      {
+        "id": "customer_alex",
+        "name": "Alex Morgan",
+        "accountIds": [
+          "account_alex_checking",
+          "account_alex_savings"
+        ]
+      },
+      {
+        "id": "customer_jordan",
+        "name": "Jordan Lee",
+        "accountIds": [
+          "account_jordan_checking",
+          "account_jordan_savings"
+        ]
+      }
+    ],
+    "accounts": [
+      {
+        "id": "account_alex_checking",
+        "customerId": "customer_alex",
+        "type": "checking",
+        "balanceCents": 125000,
+        "currency": "USD",
+        "status": "open"
+      },
+      {
+        "id": "account_alex_savings",
+        "customerId": "customer_alex",
+        "type": "savings",
+        "balanceCents": 350000,
+        "currency": "USD",
+        "status": "open"
+      },
+      {
+        "id": "account_jordan_checking",
+        "customerId": "customer_jordan",
+        "type": "checking",
+        "balanceCents": 80000,
+        "currency": "USD",
+        "status": "open"
+      },
+      {
+        "id": "account_jordan_savings",
+        "customerId": "customer_jordan",
+        "type": "savings",
+        "balanceCents": 200000,
+        "currency": "USD",
+        "status": "open"
+      }
+    ],
+    "transactions": []
+  },
+  "stateAfter": {
+    "customers": [
+      {
+        "id": "customer_alex",
+        "name": "Alex Morgan",
+        "accountIds": [
+          "account_alex_checking",
+          "account_alex_savings"
+        ]
+      },
+      {
+        "id": "customer_jordan",
+        "name": "Jordan Lee",
+        "accountIds": [
+          "account_jordan_checking",
+          "account_jordan_savings"
+        ]
+      }
+    ],
+    "accounts": [
+      {
+        "id": "account_alex_checking",
+        "customerId": "customer_alex",
+        "type": "checking",
+        "balanceCents": 175000,
+        "currency": "USD",
+        "status": "open"
+      },
+      {
+        "id": "account_alex_savings",
+        "customerId": "customer_alex",
+        "type": "savings",
+        "balanceCents": 300000,
+        "currency": "USD",
+        "status": "open"
+      },
+      {
+        "id": "account_jordan_checking",
+        "customerId": "customer_jordan",
+        "type": "checking",
+        "balanceCents": 80000,
+        "currency": "USD",
+        "status": "open"
+      },
+      {
+        "id": "account_jordan_savings",
+        "customerId": "customer_jordan",
+        "type": "savings",
+        "balanceCents": 200000,
+        "currency": "USD",
+        "status": "open"
+      }
+    ],
+    "transactions": [
+      {
+        "id": "transaction_1",
+        "sourceAccountId": "account_alex_savings",
+        "destinationAccountId": "account_alex_checking",
+        "amountCents": 50000,
+        "status": "completed"
+      }
+    ]
+  },
+  "stateChecks": {
+    "pass": true,
+    "checks": [
+      {
+        "name": "customers preserved",
+        "pass": true,
+        "detail": "Customer records are unchanged."
+      },
+      {
+        "name": "account membership preserved",
+        "pass": true,
+        "detail": "The same unique account IDs remain present."
+      },
+      {
+        "name": "account metadata preserved",
+        "pass": true,
+        "detail": "Account ID, owner, type, and currency are unchanged; only the requested balance and status may change."
+      },
+      {
+        "name": "customer account membership preserved",
+        "pass": true,
+        "detail": "Every customer retains the same account IDs."
+      },
+      {
+        "name": "unrelated accounts preserved",
+        "pass": true,
+        "detail": "Accounts outside the requested operation are unchanged."
+      },
+      {
+        "name": "preexisting transactions preserved",
+        "pass": true,
+        "detail": "No transaction that existed before the request was changed, removed, or duplicated."
+      },
+      {
+        "name": "money conserved",
+        "pass": true,
+        "detail": "Total balances are 755000 cents before and 755000 cents after."
+      },
+      {
+        "name": "transfer account results",
+        "pass": true,
+        "detail": "Savings must be 300000 cents and open; checking must be 175000 cents and open."
+      },
+      {
+        "name": "one completed transfer recorded",
+        "pass": true,
+        "detail": "Exactly one new completed transaction must move 50000 cents from savings to checking with a unique ID."
+      }
+    ]
+  },
+  "startedAt": "2026-09-11T01:23:24.379Z",
+  "finishedAt": "2026-09-11T01:23:37.087Z"
+}
