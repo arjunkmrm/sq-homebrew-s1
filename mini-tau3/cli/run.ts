@@ -6,18 +6,18 @@ import { openAICompatibleAdapter } from "tardie/model/openai"
 import { bedrockAdapterForBun } from "tardie/model/bedrock"
 import { bunModelServices } from "tardie/server/model-services"
 import { createBunHost, hostBackend } from "tardie/bun/create-host"
-import { createBaselineAgent, createAgentContext, type AgentFactory } from "./agents/baseline/actor.ts"
-import { createBankingEnvironment } from "./environment/banking.ts"
-import type { CaseRun, ModelRef } from "./types.ts"
+import { createBaselineAgent, createAgentContext, type AgentFactory } from "../agents/baseline/actor.ts"
+import { createBankingEnvironment } from "../environment/banking.ts"
+import type { CaseRun, ModelRef } from "../types.ts"
 import type { Event } from "tardie/core/event"
 import { replayProjection } from "tardie/core/projection"
-import { trajectoryProjection } from "./trajectory.ts"
-import { createCustomerAgent, parseCustomerReply } from "./customer/agent.ts"
-import { evaluateRun } from "./evals/evaluate.ts"
-import { buildReferenceOutcome } from "./evaluation/reference.ts"
-import { createBankingTaskSeed, getRequiredReadLogAllowlist, loadBankingTask, bankingTaskIds, type BankingTaskId } from "./tasks/index.ts"
+import { trajectoryProjection } from "../trajectory.ts"
+import { createCustomerAgent, parseCustomerReply } from "../customer/agent.ts"
+import { evaluateRun } from "../evals/evaluate.ts"
+import { buildReferenceOutcome } from "../evaluation/reference.ts"
+import { createBankingTaskSeed, getRequiredReadLogAllowlist, loadBankingTask, bankingTaskIds, type BankingTaskId } from "../tasks/index.ts"
 
-type Options = {
+export type RunOptions = {
   agentFile?: string
   agentModel: ModelRef
   customerModel: ModelRef
@@ -28,38 +28,37 @@ type Options = {
   listTasks: boolean
 }
 
-const modelRef = (value: string): ModelRef => {
+export const modelRef = (value: string): ModelRef => {
   const split = value.indexOf(":")
   if (split < 1 || split === value.length - 1) throw new Error(`model must be provider:model, got ${JSON.stringify(value)}`)
   return { provider: value.slice(0, split), model_id: value.slice(split + 1) }
 }
 
-export function parseArgs(args: string[]): Options {
-  const values = new Map<string, string>()
-  let dryRun = false
-  let listTasks = false
-  const allowed = new Set(["--agent-model", "--customer-model", "--agent-file", "--cases", "--output", "--timeout-ms"])
-  for (let index = 0; index < args.length; index++) {
-    const arg = args[index]!
-    if (arg === "--dry-run") { dryRun = true; continue }
-    if (arg === "--list-tasks") { listTasks = true; continue }
-    if (!allowed.has(arg)) throw new Error(`unknown option ${arg}`)
-    const value = args[++index]
-    if (!arg.startsWith("--") || value === undefined) throw new Error(`missing value for ${arg}`)
-    values.set(arg, value)
-  }
-  const agent = values.get("--agent-model") ?? process.env.TAU3_AGENT_MODEL
-  const customer = values.get("--customer-model") ?? process.env.TAU3_CUSTOMER_MODEL ?? agent
+export type RunCommandOptions = {
+  agentFile?: string
+  agentModel?: string
+  customerModel?: string
+  cases?: string
+  output?: string
+  dryRun?: boolean
+  timeoutMs?: string
+  listTasks?: boolean
+}
+
+export function toRunOptions(values: RunCommandOptions): RunOptions {
+  const agent = values.agentModel ?? process.env.TAU3_AGENT_MODEL
+  const customer = values.customerModel ?? process.env.TAU3_CUSTOMER_MODEL ?? agent
+  const listTasks = values.listTasks ?? false
   if (!listTasks && (!agent || !customer)) throw new Error("set agent and customer models as provider:model")
-  const timeoutMs = Number(values.get("--timeout-ms") ?? process.env.TAU3_TIMEOUT_MS ?? 120_000)
+  const timeoutMs = Number(values.timeoutMs ?? process.env.TAU3_TIMEOUT_MS ?? 120_000)
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0) throw new Error("--timeout-ms must be a positive integer")
   return {
-    agentFile: values.get("--agent-file"),
-    agentModel: modelRef(agent ?? "offline:unused"),
-    customerModel: modelRef(customer ?? "offline:unused"),
-    cases: (values.get("--cases") ?? "").split(",").filter(Boolean),
-    output: values.get("--output") ?? join("runs", new Date().toISOString().replaceAll(":", "-")),
-    dryRun,
+    agentFile: values.agentFile,
+    agentModel: modelRef(listTasks ? "offline:unused" : agent!),
+    customerModel: modelRef(listTasks ? "offline:unused" : customer!),
+    cases: (values.cases ?? "").split(",").filter(Boolean),
+    output: values.output ?? join("runs", new Date().toISOString().replaceAll(":", "-")),
+    dryRun: values.dryRun ?? false,
     timeoutMs,
     listTasks,
   }
@@ -80,7 +79,7 @@ const providerConfig = (provider: string) => {
   return { baseUrl, protocol: (provider === "bedrock" || provider === "amazon-bedrock") ? "bedrock-converse" : provider === "openai" ? "openai-responses" : "openai-chat-completions", env: [credential], ...((provider === "bedrock" || provider === "amazon-bedrock") ? { region: process.env.TAU3_BEDROCK_REGION ?? "us-east-1" } : {}) }
 }
 
-function runtimeEnv(options: Options): Record<string, string | undefined> {
+function runtimeEnv(options: RunOptions): Record<string, string | undefined> {
   const models = [options.agentModel, options.customerModel]
   const providers = Object.fromEntries([...new Set(models.map(({ provider }) => provider))].map((provider) => [provider, providerConfig(provider)]))
   const env: Record<string, string | undefined> = {
@@ -108,8 +107,7 @@ async function loadParticipant(file: string, environment: ReturnType<typeof crea
   return module.createAgent(createAgentContext(environment, taskId))
 }
 
-async function main() {
-  const options = parseArgs(Bun.argv.slice(2))
+export async function run(options: RunOptions) {
   if (options.listTasks) {
     console.log(JSON.stringify({ tasks: bankingTaskIds }, null, 2))
     return
@@ -251,5 +249,3 @@ async function main() {
   await writeFile(join(options.output, "summary.json"), JSON.stringify(summary, null, 2) + "\n")
   console.log(JSON.stringify({ output: options.output, ...summary.counts }, null, 2))
 }
-
-if (import.meta.main) await main()

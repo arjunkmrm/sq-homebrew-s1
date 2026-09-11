@@ -3,12 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "run": "bun run mini-tau3/run.ts",
-    "eval": "bun run scripts/evaluate.ts",
-    "challenge": "bun run mini-tau3/challenge.ts",
-    "score": "bun run scripts/score.ts",
-    "check": "bun run --cwd mini-tau3 check",
-    "inspect": "bun run mini-tau3/inspector/server.ts"
+    "cli": "bun run mini-tau3/cli/index.ts",
+    "check": "bun run --cwd mini-tau3 check"
   },
   "engines": {
     "bun": ">=1.4.0"
@@ -17,14 +13,15 @@
     "mini-tau3"
   ],
   "dependencies": {
-    "tardie": "0.25.0",
-    "effect": "4.0.0-rc.110",
-    "@tanstack/ai-bedrock": "0.2.3",
-    "@smithy/node-http-handler": "^4.11.2",
-    "@smithy/fetch-http-handler": "^5.6.3",
     "@aws-sdk/client-bedrock-runtime": "^3.1079.0",
+    "@smithy/fetch-http-handler": "^5.6.3",
+    "@smithy/node-http-handler": "^4.11.2",
+    "@tanstack/ai-bedrock": "0.2.3",
+    "commander": "^15.0.0",
+    "effect": "4.0.0-rc.110",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "tardie": "0.25.0"
   },
   "devDependencies": {
     "typescript": "7.0.2",

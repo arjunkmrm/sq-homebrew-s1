@@ -3,6 +3,7 @@
 See the [setup guide](../README.md) to build and compare agents.
 
 ```text
+cli/             # Commands and argument parsing (Commander)
 evaluation/
   reference.ts   # Task reference actions → expected state
   outcome.ts     # Compare actual state with expected state
@@ -14,7 +15,7 @@ rewards/
   score.ts       # Evaluate a saved run, then reward it
 ```
 
-Every task uses the same outcome evaluator. `run.ts` saves its result as `outcome`. A conventional eval reads that success definition; the reward adds verification, consent, errors, and efficiency without defining success again. Offline evaluation and scoring recompute the outcome from the saved snapshots.
+Every task uses the same outcome evaluator. `cli/run.ts` saves its result as `outcome`. A conventional eval reads that success definition; the reward adds verification, consent, errors, and efficiency without defining success again. Offline evaluation and scoring recompute the outcome from the saved snapshots.
 
 ```ts
 const outcome = evaluateRun(task, run)

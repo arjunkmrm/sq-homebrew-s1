@@ -35,8 +35,7 @@ workshop/
 │   ├── evals/                  # Pass/fail evaluation
 │   ├── rewards/                # Outcome, trajectory, and cost scoring
 │   ├── trajectory.ts           # Events → trajectory
-│   ├── run.ts                  # Run an agent
-│   └── challenge.ts            # Compare agents
+│   └── cli/                    # run, eval, score, inspect, challenge
 └── runs/                       # Generated logs and results
 ```
 
@@ -49,7 +48,7 @@ It combines a short system prompt, document search/read, and banking tools. Ever
 ## Step 3: run it
 
 ```sh
-bun run run \
+bun run cli run \
   --cases task_093 \
   --agent-file mini-tau3/agents/baseline/actor.ts \
   --output runs/baseline
@@ -60,7 +59,7 @@ The agent investigates missing savings interest with a simulated customer. The l
 ## Step 4: inspect the run
 
 ```sh
-bun run inspect runs/baseline/task_093.json
+bun run cli inspect runs/baseline/task_093.json
 ```
 
 Opens the React event viewer locally. Filter events, expand their JSON, or open another log. A `summary.json` lets you switch between runs. Press `Ctrl+C` to stop.

@@ -2,10 +2,11 @@ import { spawn } from "node:child_process"
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { basename, isAbsolute, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
-import { scoreSavedRun } from "./rewards/score.ts"
-import type { CaseRun } from "./types.ts"
+import { scoreSavedRun } from "../rewards/score.ts"
+import { bankingTaskIds } from "../tasks/index.ts"
+import type { CaseRun } from "../types.ts"
 
-type ChallengeOptions = {
+export type ChallengeOptions = {
   agents: string[]
   trials: number
   concurrency: number
@@ -16,39 +17,43 @@ type ChallengeOptions = {
   cases: string[]
 }
 
-function parseChallengeArgs(args: string[]): ChallengeOptions {
-  const values = new Map<string, string>()
-  const allowed = new Set(["--agents", "--trials", "--concurrency", "--output", "--model", "--customer-model", "--timeout-ms", "--cases"])
-  for (let index = 0; index < args.length; index++) {
-    const key = args[index]!
-    if (!allowed.has(key)) throw new Error(`unknown option ${key}`)
-    const value = args[++index]
-    if (value === undefined) throw new Error(`missing value for ${key}`)
-    values.set(key, value)
-  }
-  const defaultAgent = fileURLToPath(new URL("./agents/baseline/actor.ts", import.meta.url))
-  const agents = (values.get("--agents") ?? defaultAgent).split(",").filter(Boolean).map(file => isAbsolute(file) ? file : resolve(process.cwd(), file))
-  const trials = Number(values.get("--trials") ?? 1)
-  const concurrency = Number(values.get("--concurrency") ?? 2)
-  const timeoutMs = Number(values.get("--timeout-ms") ?? 240_000)
+export type ChallengeCommandOptions = {
+  agents?: string
+  trials?: string
+  concurrency?: string
+  output?: string
+  model?: string
+  customerModel?: string
+  timeoutMs?: string
+  cases?: string
+}
+
+export function toChallengeOptions(values: ChallengeCommandOptions): ChallengeOptions {
+  const defaultAgent = fileURLToPath(new URL("../agents/baseline/actor.ts", import.meta.url))
+  const agents = (values.agents ?? defaultAgent).split(",").filter(Boolean).map(file => isAbsolute(file) ? file : resolve(process.cwd(), file))
+  const trials = Number(values.trials ?? 1)
+  const concurrency = Number(values.concurrency ?? 2)
+  const timeoutMs = Number(values.timeoutMs ?? 240_000)
   if (!agents.length) throw new Error("--agents must name at least one file")
   if (!Number.isSafeInteger(trials) || trials < 1 || trials > 10) throw new Error("--trials must be an integer from 1 to 10")
   if (!Number.isSafeInteger(concurrency) || concurrency < 1 || concurrency > 4) throw new Error("--concurrency must be an integer from 1 to 4")
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 240_000) throw new Error("--timeout-ms must be an integer from 1 to 240000")
-  const cases = (values.get("--cases") ?? "task_097").split(",").filter(Boolean)
-  return { agents, trials, concurrency, output: resolve(values.get("--output") ?? join("runs", `challenge-${new Date().toISOString().replaceAll(":", "-")}`)), model: values.get("--model"), customerModel: values.get("--customer-model") ?? process.env.TAU3_CUSTOMER_MODEL ?? process.env.TAU3_AGENT_MODEL, timeoutMs, cases }
+  const cases = (values.cases ?? "task_097").split(",").filter(Boolean)
+  return { agents, trials, concurrency, output: resolve(values.output ?? join("runs", `challenge-${new Date().toISOString().replaceAll(":", "-")}`)), model: values.model, customerModel: values.customerModel ?? process.env.TAU3_CUSTOMER_MODEL ?? process.env.TAU3_AGENT_MODEL, timeoutMs, cases }
 }
 
 const runProcess = (args: string[]) => new Promise<number>((resolveRun, reject) => {
-  const child = spawn(process.execPath, ["run", fileURLToPath(new URL("./run.ts", import.meta.url)), ...args], { cwd: fileURLToPath(new URL("./", import.meta.url)), env: process.env, stdio: ["ignore", "ignore", "ignore"] })
+  const child = spawn(process.execPath, ["run", fileURLToPath(new URL("./index.ts", import.meta.url)), "run", ...args], { cwd: fileURLToPath(new URL("../", import.meta.url)), env: process.env, stdio: ["ignore", "ignore", "ignore"] })
   child.once("error", reject)
   child.once("exit", code => resolveRun(code ?? -1))
 })
 
-async function main() {
-  const options = parseChallengeArgs(Bun.argv.slice(2))
+export async function challenge(options: ChallengeOptions) {
+  const caseIds = options.cases.includes("all") ? bankingTaskIds : options.cases
+  const unknown = caseIds.filter(id => !bankingTaskIds.includes(id as typeof bankingTaskIds[number]))
+  if (unknown.length > 0) throw new Error(`unknown cases: ${unknown.join(", ")}`)
+  if (caseIds.length === 0) throw new Error("no cases selected")
   await mkdir(options.output, { recursive: true })
-  const caseIds = options.cases.includes("all") ? (await import("./tasks/index.ts")).bankingTaskIds : options.cases
   const jobs = options.agents.flatMap((agentFile, agentIndex) => caseIds.flatMap(taskId => Array.from({ length: options.trials }, (_, trialIndex) => ({ agentFile, agentIndex, taskId, trialIndex }))))
   const runs: Array<{ agentFile: string; agentIndex: number; taskId: string; trialIndex: number; run?: CaseRun; error?: string }> = []
   let next = 0
@@ -93,5 +98,3 @@ async function main() {
   await writeFile(join(options.output, "leaderboard.json"), JSON.stringify(result, null, 2) + "\n")
   console.log(JSON.stringify(result, null, 2))
 }
-
-if (import.meta.main) await main()
