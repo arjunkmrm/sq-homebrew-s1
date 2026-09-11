@@ -1,0 +1,8 @@
+# Monitoring transactions in a Light Green Account
+
+## Configure threshold-based alerts
+- Set transaction notifications to trigger for any card purchase, ATM withdrawal, or transfer at or above 62. This provides visibility into larger transactions while reducing noise from small, routine activity.
+
+### Tips for effective monitoring
+- Start with 62 aligned to typical weekly spending, then adjust based on patterns you observe.
+- Periodically review transactions that triggered alerts to discuss budgeting and safety with your teen.

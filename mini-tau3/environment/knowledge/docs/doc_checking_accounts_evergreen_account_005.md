@@ -1,0 +1,15 @@
+# How Rho calculates carbon offsets
+
+## Calculation model
+- For each eligible purchase, Rho multiplies the posted dollar amount by $1.25 to determine grams of CO₂ offset
+- Purchase refunds reduce accrued offsets using the same rate of $1.25
+
+## Transaction eligibility rules
+- Only eligible purchase transactions accrue offsets
+- EveryonePay transfers do not accrue offsets; this applies regardless of the $3,000
+
+## Aggregation and rounding
+- Offsets are aggregated over the statement period and rounded to whole grams in your environmental reporting
+
+## Transparency
+- The calculation rate used is $1.25 and is displayed within your impact details

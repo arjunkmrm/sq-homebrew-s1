@@ -1,9 +1,20 @@
-import corpus from "./corpus.json"
+import { readdirSync, readFileSync } from "node:fs"
+import { join } from "node:path"
+import { fileURLToPath } from "node:url"
 
 export type KnowledgeDocument = { id: string; title: string; content: string }
 export type KnowledgeSearchResult = { id: string; title: string; excerpt: string }
 
-const documents = corpus as KnowledgeDocument[]
+// Read once at startup; searches use the in-memory index below.
+const directory = fileURLToPath(new URL("./docs/", import.meta.url))
+const documents: KnowledgeDocument[] = readdirSync(directory).filter(file => file.endsWith(".md")).sort().map(file => {
+  const markdown = readFileSync(join(directory, file), "utf8")
+  const separator = markdown.indexOf("\n\n")
+  if (!markdown.startsWith("# ") || separator < 0 || markdown.slice(0, separator).includes("\n")) {
+    throw new Error(`Expected a title heading and blank line in knowledge document ${file}`)
+  }
+  return { id: file.slice(0, -3), title: markdown.slice(2, separator), content: markdown.slice(separator + 2) }
+})
 const byId = new Map(documents.map(document => [document.id, document]))
 
 const normalize = (word: string) => {

@@ -2,5 +2,7 @@
   "source": "sierra-research/tau2-bench banking_knowledge corpus",
   "sourceCommit": "2174a603f6d014ef94473ffa95957f6ce27100db",
   "documentCount": 698,
-  "corpusSha256": "ee5a07256d6df1c3208784bde9dd7bb3894eab8136a55e079363ad8fde78bf33"
+  "sourceCorpusSha256": "ee5a07256d6df1c3208784bde9dd7bb3894eab8136a55e079363ad8fde78bf33",
+  "documentsSha256": "ee5a07256d6df1c3208784bde9dd7bb3894eab8136a55e079363ad8fde78bf33",
+  "hashFormat": "SHA-256 of UTF-8 JSON.stringify([{id,title,content}, ...]) sorted by document ID."
 }

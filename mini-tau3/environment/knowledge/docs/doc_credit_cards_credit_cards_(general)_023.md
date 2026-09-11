@@ -1,0 +1,30 @@
+# Having Trouble Making Purchases with Your Card?
+
+We understand how frustrating it can be when your credit card doesn't work as expected, especially when you're trying to make an important purchase. If your Rho-Bank credit card is being declined even though you know you have available credit, there are several things that could be happening, and we're here to help you figure it out.
+
+## Common Reasons for Declined Transactions
+
+There are many reasons why a transaction might be declined, even when you have credit available:
+
+- **Fraud Protection**: Our security systems may have flagged the transaction as potentially suspicious. This often happens with unusual purchase patterns, transactions in new locations, or large purchases that differ from your typical spending.
+- **Merchant Issues**: Sometimes the problem is on the merchant's end—their payment terminal may be malfunctioning, or they may have entered your card information incorrectly.
+- **Card Not Activated**: If you recently received a new or replacement card, it may need to be activated before it can be used.
+- **Expired Card**: Your card may have passed its expiration date without you realizing it.
+- **International Restrictions**: Some cards have restrictions on international transactions that need to be lifted before traveling abroad.
+- **Technical Issues**: Occasionally, temporary system issues can affect transaction processing.
+
+## What to Try First
+
+Before contacting us, here are a few quick things you can check:
+
+1. Make sure you're entering your card information correctly, including the expiration date and CVV
+2. Try the transaction again—sometimes a simple retry resolves temporary glitches
+3. Check if your card has been activated (for new cards)
+4. Verify that your card hasn't expired
+5. Try a different payment terminal or merchant if possible
+
+## Contact Us for Help
+
+If you've tried the above steps and are still having trouble, please reach out to our customer service team right away. We can review your account, check for any holds or restrictions, verify that there are no fraud alerts blocking your transactions, and help resolve the issue so you can get back to using your card.
+
+You can reach us at 1-800-RHO-BANK, chat with us through the Rho-Bank mobile app, or visit rhobank.com/help. Our team is available to assist you and will work quickly to diagnose and fix the problem.
