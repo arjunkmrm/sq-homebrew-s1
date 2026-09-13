@@ -5,7 +5,7 @@ import type { LogEvent } from './load-run'
 
 type Item = { kind: 'message'; index: number; message: TrajectoryMessage } | { kind: 'tool'; index: number; tool: TrajectoryToolCall }
 
-export function ChatTranscript({ events, busy, customerTurns }: { events: LogEvent[]; busy: boolean; customerTurns?: Array<{ text: string }> }) {
+export function ChatTranscript({ events, busy, customerTurns, empty = 'Run the agent to see the conversation.' }: { events: LogEvent[]; busy: boolean; customerTurns?: Array<{ text: string }>; empty?: string }) {
   const items = useMemo(() => {
     let state = trajectoryProjection.initial()
     for (const event of events) state = trajectoryProjection.step(state, event as Event)
@@ -19,7 +19,7 @@ export function ChatTranscript({ events, busy, customerTurns }: { events: LogEve
   const finalCustomerTurn = customerTurns?.at(-1)?.text
   const showFinalCustomerTurn = finalCustomerTurn && !items.some(item => item.kind === 'message' && item.message.content === finalCustomerTurn)
   return <div className="chat-transcript" aria-label="Agent conversation">
-    {!items.length && <p className="chat-empty">{busy ? 'Starting the conversation…' : 'Run the agent to see the conversation.'}</p>}
+    {!items.length && <p className="chat-empty">{busy ? 'Starting the conversation…' : empty}</p>}
     {items.map(item => item.kind === 'message' ? <article key={`message-${item.index}`} className={`chat-message chat-${item.message.role}${item.message.status === 'failed' ? ' chat-failed' : ''}`}>
       <p className="chat-role">{item.message.role === 'user' ? 'Customer' : item.message.status === 'failed' ? 'Agent error' : 'Agent'}</p>
       <div className="chat-bubble">{item.message.content}</div>

@@ -19,3 +19,16 @@ export async function startRun(url: string, onQueued: () => void, options: Optio
     await wait()
   }
 }
+
+// A static deployment has no runner endpoint, and some hosts answer unknown paths with the
+// app shell, so the runner counts as live only when the models endpoint returns real JSON.
+export async function probeLiveRunner(request: typeof fetch = fetch): Promise<boolean> {
+  try {
+    const response = await request('/api/banking-models', { headers: { Accept: 'application/json' } })
+    if (!response.ok) return false
+    const value = await response.json() as { models?: unknown }
+    return Array.isArray(value.models)
+  } catch {
+    return false
+  }
+}

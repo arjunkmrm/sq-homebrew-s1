@@ -5,14 +5,17 @@ import './scoring.css'
 import rewardSource from '../../../workshop/mini-tau3/rewards/banking.ts?raw'
 import { HighlightedCode } from '../viewer/HighlightedCode'
 import { RunPicker } from '../viewer/RunPicker'
+import { fetchRecordedRun } from '../viewer/replay-run'
 
 type Entry = { key: number; label: string; run: ViewRun }
+const RECORDED_LABEL = 'Recorded run · baseline'
 const number = (value: number | null) => value === null ? '—' : Number(value.toFixed(3)).toString()
 export function TransferScorer({ embedded = false, initialRun }: { embedded?: boolean; initialRun?: ViewRun }) {
   const [entries, setEntries] = useState<Entry[]>([])
   const [errors, setErrors] = useState<string[]>([])
   const [selected, setSelected] = useState(0)
   const [exampleLoading, setExampleLoading] = useState(false)
+  const [provenance, setProvenance] = useState<string>()
   useEffect(() => {
     if (initialRun) { setEntries(current => [{ key: -1, label: 'Workshop run', run: initialRun }, ...current.filter(entry => entry.key !== -1)]); setSelected(0) }
   }, [initialRun])
@@ -32,12 +35,11 @@ export function TransferScorer({ embedded = false, initialRun }: { embedded?: bo
   async function loadExample() {
     setExampleLoading(true); setErrors([])
     try {
-      const response = await fetch('/runs/task-093-example.json')
-      if (!response.ok) throw new Error('The example replay could not be loaded.')
-      const runs = loadRuns(await response.text())
-      setEntries(current => [...current.filter(item => item.label !== 'Example · reference replay'), ...runs.map((run, index) => ({ key: Date.now() + index, label: 'Example · reference replay', run }))])
-      setSelected(entries.filter(item => item.label !== 'Example · reference replay').length)
-    } catch (error) { setErrors([error instanceof Error ? error.message : 'The example replay could not be loaded.']) }
+      const { run, provenance } = await fetchRecordedRun()
+      setProvenance(provenance)
+      setEntries(current => [...current.filter(item => item.label !== RECORDED_LABEL), { key: Date.now(), label: RECORDED_LABEL, run }])
+      setSelected(entries.filter(item => item.label !== RECORDED_LABEL).length)
+    } catch (error) { setErrors([error instanceof Error ? error.message : 'The recorded run could not be loaded.']) }
     finally { setExampleLoading(false) }
   }
   const entry = scores[Math.min(selected, scores.length - 1)]
@@ -47,16 +49,16 @@ export function TransferScorer({ embedded = false, initialRun }: { embedded?: bo
     {!embedded && <h1>score the <span className="accent">trajectory.</span></h1>}
     <div className="score-log-toolbar">
       {entries.length > 0 && <RunPicker value={String(Math.min(selected, entries.length - 1))} options={entries.map((item, index) => ({value: String(index), label: item.label}))} onChange={value => setSelected(Number(value))} ariaLabel="Select run to score" />}
-      <div className="scorer-actions"><button type="button" className="scorer-example" disabled={exampleLoading} onClick={() => void loadExample()}>{exampleLoading ? 'Loading example…' : 'Load example'}</button><label className="scorer-upload">Add run logs<input type="file" accept=".json,application/json" multiple onChange={event => { void addFiles(Array.from(event.target.files ?? [])); event.target.value = '' }} /></label></div>
+      <div className="scorer-actions"><button type="button" className="scorer-example" disabled={exampleLoading} onClick={() => void loadExample()}>{exampleLoading ? 'Loading recorded run…' : 'Load recorded run'}</button><label className="scorer-upload">Add run logs<input type="file" accept=".json,application/json" multiple onChange={event => { void addFiles(Array.from(event.target.files ?? [])); event.target.value = '' }} /></label></div>
     </div>
-    {entry?.label === 'Example · reference replay' && <p className="scorer-example-note">Reference replay · illustrative timing and usage</p>}
+    {entry?.label === RECORDED_LABEL && <p className="scorer-example-note">{provenance ?? 'Recorded run · real model call, replayed from a saved log'}</p>}
     {errors.map((error, index) => <p className="scorer-error" role="alert" key={index}>{error}</p>)}
     <div className="score-log-layout score-three-columns">
       <section className="score-event-panel">
         <header><h3>trajectory</h3><span>{entry?.run.events.length ?? 0} events</span></header>
         {entry?.run.request && <p className="score-log-request">{entry.run.request}</p>}
         <div className="score-event-scroll" key={entry?.key}>
-          {!entry ? <div className="score-trajectory-placeholder"><p>Run task 093 on slide 20 or load the reference replay.</p><div aria-hidden="true"><i /><i /><i /><i /><i /></div><small>customer → agent → tools → outcome</small></div> : !entry.run.events.length ? <p className="scorer-empty">No events recorded.</p> : <ol>{entry.run.events.map((event, index) => {
+          {!entry ? <div className="score-trajectory-placeholder"><p>Replay task 093 on slide 20 or load the recorded run.</p><div aria-hidden="true"><i /><i /><i /><i /><i /></div><small>customer → agent → tools → outcome</small></div> : !entry.run.events.length ? <p className="scorer-empty">No events recorded.</p> : <ol>{entry.run.events.map((event, index) => {
             const value = event.name ?? event.text ?? event.output ?? ''
             const preview = typeof value === 'string' ? value : JSON.stringify(value)
             return <li key={index}><details><summary><span className="score-event-index">{String(index + 1).padStart(2, '0')}</span><span><strong>{event.type}</strong>{preview && <small>{preview.slice(0, 130)}</small>}</span></summary><pre>{JSON.stringify(event, null, 2)}</pre></details></li>
