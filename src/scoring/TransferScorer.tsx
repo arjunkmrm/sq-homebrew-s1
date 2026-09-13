@@ -58,7 +58,7 @@ export function TransferScorer({ embedded = false, initialRun }: { embedded?: bo
         <header><h3>trajectory</h3><span>{entry?.run.events.length ?? 0} events</span></header>
         {entry?.run.request && <p className="score-log-request">{entry.run.request}</p>}
         <div className="score-event-scroll" key={entry?.key}>
-          {!entry ? <div className="score-trajectory-placeholder"><p>Replay task 093 on slide 20 or load the recorded run.</p><div aria-hidden="true"><i /><i /><i /><i /><i /></div><small>customer → agent → tools → outcome</small></div> : !entry.run.events.length ? <p className="scorer-empty">No events recorded.</p> : <ol>{entry.run.events.map((event, index) => {
+          {!entry ? <div className="score-trajectory-placeholder"><p>Play the recorded run on slide 20, or load it here.</p><div aria-hidden="true"><i /><i /><i /><i /><i /></div><small>customer → agent → tools → outcome</small></div> : !entry.run.events.length ? <p className="scorer-empty">No events recorded.</p> : <ol>{entry.run.events.map((event, index) => {
             const value = event.name ?? event.text ?? event.output ?? ''
             const preview = typeof value === 'string' ? value : JSON.stringify(value)
             return <li key={index}><details><summary><span className="score-event-index">{String(index + 1).padStart(2, '0')}</span><span><strong>{event.type}</strong>{preview && <small>{preview.slice(0, 130)}</small>}</span></summary><pre>{JSON.stringify(event, null, 2)}</pre></details></li>

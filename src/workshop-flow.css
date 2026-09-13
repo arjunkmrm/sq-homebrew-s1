@@ -143,3 +143,16 @@ main.slide-deck.workshop-app-slide { padding:clamp(28px,5.5vh,64px) clamp(66px,5
 .live-recorded-note { margin:16px 0 0; padding:12px 14px; border-left:2px solid var(--moss); background:var(--moss-wash); color:var(--ink-2); font:12px/1.6 var(--mono); }
 .live-recorded-chip { display:inline-block; margin-left:10px; padding:3px 7px; border:1px solid var(--moss); border-radius:2px; background:var(--moss); color:var(--accent-contrast); font:500 10px/1 var(--mono); letter-spacing:.08em; vertical-align:middle; }
 .live-cli-command code { font: 12px/1.5 var(--mono); overflow-wrap: anywhere; }
+
+@media (max-width: 820px), (max-height: 640px) {
+  .live-log-scroll { height: auto; min-height: 0; max-height: 60vh; }
+}
+@media (max-width: 820px) {
+  .workshop-embedded-slide > h2 { font-size: clamp(30px, 8.4vw, 46px); }
+  .live-log-scroll { height: auto; min-height: 0; max-height: 60vh; }
+  .embedded-scorer .scorer-results { max-height: none; }
+  .live-log header { flex-wrap: wrap; gap: 8px 12px; padding: 12px 14px; }
+  .live-log header > span { order: -1; width: 100%; }
+  .live-setup { gap: 12px; }
+  .live-setup p { font-size: 17px; }
+}
