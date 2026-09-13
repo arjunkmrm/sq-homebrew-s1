@@ -10,8 +10,8 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { scoreBankingRun } from '../../workshop/mini-tau3/rewards/banking'
-import { loadBankingTask, type BankingTaskId } from '../../workshop/mini-tau3/tasks'
+import { scoreBankingRun } from '../../mini-tau3/rewards/banking'
+import { loadBankingTask, type BankingTaskId } from '../../mini-tau3/tasks'
 
 const argument = (name: string, fallback: string) => {
   const index = process.argv.indexOf(`--${name}`)
@@ -21,8 +21,8 @@ const caseId = argument('case', 'task_093') as BankingTaskId
 const model = argument('model', '')
 const from = argument('from', '')
 
-const MINI_TAU3 = fileURLToPath(new URL('../../workshop/mini-tau3/', import.meta.url))
-const WORKSHOP_ENV_FILE = fileURLToPath(new URL('../../workshop/.env', import.meta.url))
+const MINI_TAU3 = fileURLToPath(new URL('../../mini-tau3/', import.meta.url))
+const WORKSHOP_ENV_FILE = fileURLToPath(new URL('../../.env', import.meta.url))
 const output = from ? fileURLToPath(new URL(from, `file://${process.cwd()}/`)) : await mkdtemp(join(tmpdir(), 'record-example-'))
 try {
   if (!from) {

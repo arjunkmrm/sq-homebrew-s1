@@ -4,13 +4,16 @@
   "type": "module",
   "scripts": {
     "cli": "bun run mini-tau3/cli/index.ts",
-    "check": "bun run --cwd mini-tau3 check"
+    "check": "bun run --cwd mini-tau3 check",
+    "slides": "bun run --cwd slides dev",
+    "slides:build": "bun run --cwd slides build"
   },
   "engines": {
     "bun": ">=1.4.0"
   },
   "workspaces": [
-    "mini-tau3"
+    "mini-tau3",
+    "slides"
   ],
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.1079.0",

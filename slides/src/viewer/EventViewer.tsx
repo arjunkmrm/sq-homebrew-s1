@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { loadRuns, type ViewRun, type LogEvent } from './load-run'
-import { trajectoryProjection } from '../../../workshop/mini-tau3/trajectory'
+import { trajectoryProjection } from '../../../mini-tau3/trajectory'
 import type { Event } from 'tardie/core/event'
 import './viewer.css'
 

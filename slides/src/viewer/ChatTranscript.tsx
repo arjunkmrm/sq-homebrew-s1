@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { trajectoryProjection, type TrajectoryMessage, type TrajectoryToolCall } from '../../../workshop/mini-tau3/trajectory'
+import { trajectoryProjection, type TrajectoryMessage, type TrajectoryToolCall } from '../../../mini-tau3/trajectory'
 import type { Event } from 'tardie/core/event'
 import type { LogEvent } from './load-run'
 

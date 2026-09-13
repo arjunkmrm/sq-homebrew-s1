@@ -1,4 +1,4 @@
-import type { BankingAuditEntry } from "../../../../workshop/mini-tau3/environment/banking.ts"
+import type { BankingAuditEntry } from "../../../../mini-tau3/environment/banking.ts"
 import { evaluateState, type StateCheck } from "../evals/state-checks.ts"
 import type { LegacyBankState as BankState } from "./legacy-bank-state.ts"
 type CustomerTurnEvidence = { text: string; afterToolSeq: number; consent?: { credits: boolean; reports: boolean } }

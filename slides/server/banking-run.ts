@@ -14,9 +14,9 @@ const DEFAULT_CASE = 'task_093'
 const ALLOWED_CASES = new Set(['task_056', 'task_060', 'task_062', 'task_072', 'task_074', 'task_093', 'task_094', 'task_095', 'task_096', 'task_097'])
 const TOTAL_TIMEOUT_MS = 260_000
 const STREAM_PREFIX = '__TAU3_STREAM__'
-const MINI_TAU3 = fileURLToPath(new URL('../../workshop/mini-tau3/', import.meta.url))
+const MINI_TAU3 = fileURLToPath(new URL('../../mini-tau3/', import.meta.url))
 const RUNNER = join(MINI_TAU3, 'cli/index.ts')
-const WORKSHOP_ENV_FILE = fileURLToPath(new URL('../../workshop/.env', import.meta.url))
+const WORKSHOP_ENV_FILE = fileURLToPath(new URL('../../.env', import.meta.url))
 
 const MODEL_OPTIONS = [
   { id: '', label: 'Configured default' },
@@ -100,7 +100,7 @@ async function executeRun(caseId: string, model: string, onPacket?: (packet: Str
   const agentModel = model || config.TAU3_AGENT_MODEL || ''
   const customerModel = config.TAU3_CUSTOMER_MODEL || agentModel
   if ([agentModel, customerModel].some(value => value.startsWith('openrouter:')) && !config.OPENROUTER_API_KEY?.trim()) {
-    throw new Error('Set OPENROUTER_API_KEY in workshop/.env to run the agent and customer.')
+    throw new Error('Set OPENROUTER_API_KEY in .env to run the agent and customer.')
   }
   const output = await mkdtemp(join(tmpdir(), 'flamecast-banking-run-'))
   let child: ChildProcess | undefined
@@ -232,7 +232,7 @@ export function bankingRunPlugin(): Plugin {
           send({ kind: 'result', run })
           response.end()
         } catch (error) {
-          const message = error instanceof Error && (error.message === 'The banking run timed out.' || error.message === 'Set OPENROUTER_API_KEY in workshop/.env to run the agent and customer.')
+          const message = error instanceof Error && (error.message === 'The banking run timed out.' || error.message === 'Set OPENROUTER_API_KEY in .env to run the agent and customer.')
             ? error.message
             : 'The banking run could not be completed.'
           if (streaming && response.headersSent) {

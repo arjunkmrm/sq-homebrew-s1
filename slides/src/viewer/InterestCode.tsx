@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import actor from '../../../workshop/mini-tau3/agents/baseline/actor.ts?raw'
-import environment from '../../../workshop/mini-tau3/environment/banking.ts?raw'
-import tools from '../../../workshop/mini-tau3/environment/tools.ts?raw'
-import customer from '../../../workshop/mini-tau3/environment/customer/agent.ts?raw'
-import reward from '../../../workshop/mini-tau3/rewards/banking.ts?raw'
+import actor from '../../../mini-tau3/agents/baseline/actor.ts?raw'
+import environment from '../../../mini-tau3/environment/banking.ts?raw'
+import tools from '../../../mini-tau3/environment/tools.ts?raw'
+import customer from '../../../mini-tau3/environment/customer/agent.ts?raw'
+import reward from '../../../mini-tau3/rewards/banking.ts?raw'
 import { HighlightedCode } from './HighlightedCode'
 
 const files = { 'agents/baseline/actor.ts': actor, 'environment/banking.ts': environment, 'environment/tools.ts': tools, 'environment/customer/agent.ts': customer, 'rewards/banking.ts': reward }

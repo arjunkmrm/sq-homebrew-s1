@@ -1,6 +1,6 @@
-import { scoreBankingRun } from '../../../workshop/mini-tau3/rewards/banking'
-import { loadBankingTask, bankingTaskIds, type BankingTaskId } from '../../../workshop/mini-tau3/tasks'
-import type { CaseRun } from '../../../workshop/mini-tau3/types'
+import { scoreBankingRun } from '../../../mini-tau3/rewards/banking'
+import { loadBankingTask, bankingTaskIds, type BankingTaskId } from '../../../mini-tau3/tasks'
+import type { CaseRun } from '../../../mini-tau3/types'
 import type { ViewRun } from './load-run'
 
 // Display the runner's shared outcome result; the CLI evaluator recomputes it from snapshots.

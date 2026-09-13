@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { HighlightedCode } from './HighlightedCode'
-import actor from '../../../workshop/mini-tau3/agents/baseline/actor.ts?raw'
-import instructions from '../../../workshop/mini-tau3/agents/baseline/components/instructions.ts?raw'
-import bankTools from '../../../workshop/mini-tau3/agents/baseline/components/bank-tools.ts?raw'
+import actor from '../../../mini-tau3/agents/baseline/actor.ts?raw'
+import instructions from '../../../mini-tau3/agents/baseline/components/instructions.ts?raw'
+import bankTools from '../../../mini-tau3/agents/baseline/components/bank-tools.ts?raw'
 
 const files = {
   actor: { path: 'actor.ts', source: actor, description: 'The actor composes instructions and tools into an agent.' },

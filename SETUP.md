@@ -36,6 +36,7 @@ sq-homebrew-s1/
 │   ├── rewards/                # Outcome, trajectory, and cost scoring
 │   ├── trajectory.ts           # Events → trajectory
 │   └── cli/                    # run, eval, score, inspect, challenge
+├── slides/                     # Presentation deck; not needed for the workshop
 └── runs/                       # Generated logs and results
 ```
 

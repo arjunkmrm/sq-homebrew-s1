@@ -1,4 +1,4 @@
-import source from '../../workshop/mini-tau3/rewards/banking.ts?raw'
+import source from '../../mini-tau3/rewards/banking.ts?raw'
 import { scoreRun } from './viewer/score-run'
 import type { ViewRun } from './viewer/load-run'
 import { HighlightedCode } from './viewer/HighlightedCode'

@@ -1,4 +1,4 @@
-import baseline from '../../../workshop/mini-tau3/agents/baseline/actor.ts?raw'
+import baseline from '../../../mini-tau3/agents/baseline/actor.ts?raw'
 import { HighlightedCode } from './HighlightedCode'
 
 export function VariantCode({ inline = false }: { version?: 'baseline'; inline?: boolean }) {

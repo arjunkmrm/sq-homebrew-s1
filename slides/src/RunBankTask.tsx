@@ -3,8 +3,8 @@ import { type LogEvent, type ViewRun } from './viewer/load-run'
 import { fetchRecordedRun, replayRun, type RecordedRun } from './viewer/replay-run'
 import { ChatTranscript } from './viewer/ChatTranscript'
 import { BaselineCode } from './viewer/BaselineCode'
-import { EventLog } from '../../workshop/mini-tau3/inspector/EventLog'
-import { measureRunPerformance } from '../../workshop/mini-tau3/rewards/performance'
+import { EventLog } from '../../mini-tau3/inspector/EventLog'
+import { measureRunPerformance } from '../../mini-tau3/rewards/performance'
 
 const modelNames: Record<string, string> = {
   'openrouter:openai/gpt-5.6-terra': 'GPT-5.6 Terra',

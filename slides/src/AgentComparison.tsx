@@ -9,7 +9,7 @@ import { InterestCode } from './viewer/InterestCode'
 import { VariantCode } from './viewer/VariantCode'
 import { RunPicker } from './viewer/RunPicker'
 import './comparison.css'
-import { EventLog } from '../../workshop/mini-tau3/inspector/EventLog'
+import { EventLog } from '../../mini-tau3/inspector/EventLog'
 
 const baselineAgent = { id: 'baseline' as const, label: 'Baseline' }
 type Configuration = { id: string; version: 'baseline'; model: string; selected: boolean }
