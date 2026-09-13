@@ -50,7 +50,7 @@ export function RewardCode({ run }: { run?: ViewRun }) {
     </div>)}</div>
     {result ? <div className="banking-reward-result" aria-label="Score for the current workshop run">
       <span>THIS RUN</span><strong>{numeric(result.outcomePoints, 1)} outcome</strong><strong>+ {numeric(result.safetyPoints, 1)} safety</strong><strong>− {numeric(result.penalty, 1)} penalties</strong><strong>− {numeric(result.efficiencyCost, 3)} efficiency</strong><strong>= {numeric(result.total, 3)}</strong><small>estimated API cost: {result.costUsd == null ? 'unknown' : '$' + result.costUsd.toFixed(4)} · displayed separately</small>
-    </div> : <p className="reward-code-note">{error || 'Run task 093 first to see its score here.'}</p>}
+    </div> : <p className="reward-code-note">{error || 'Play the recorded run on slide 20 to see its score here.'}</p>}
     <p className="reward-code-note">Dollar cost is reported separately; token usage is not charged twice. Missing measurements remain unknown.</p>
     <a className="flow-next" href="#22">Score this run →</a>
   </section>

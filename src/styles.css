@@ -153,6 +153,15 @@ h1 > span { display: block; }
 @media (max-width: 760px) {
   .starting-grid { grid-template-columns: 1fr; gap: 28px; }
   .starting-setup-row { grid-template-columns: minmax(0, 1fr) 112px; }
+  /* the clone URL is 43 characters; give the block the full width and shrink it
+     so the URL stops breaking mid-word */
+  .starting-setup pre { padding: 14px; font-size: 11.5px; line-height: 1.62; }
+}
+@media (max-width: 560px) {
+  .starting-setup-row { grid-template-columns: 1fr; justify-items: start; gap: 18px; }
+  .starting-repo { flex-direction: row; align-items: center; gap: 12px; }
+  .starting-repo img { width: 84px; }
+  .starting-repo span { margin-top: 0; }
 }
 @media (max-height: 720px) and (min-width: 761px) {
   .starting-kicker { margin-bottom: 6px; }
@@ -773,4 +782,17 @@ button.grid-cell:focus-visible { outline: 2px solid var(--moss); outline-offset:
   .trajectory-question-metrics { grid-template-columns: 1fr; gap: 4px; }
   .trajectory-question-metrics p { display: flex; flex-wrap: wrap; gap: 6px 14px; }
   .trajectory-question-close { font-size: clamp(20px, 5.6vw, 28px); }
+  .repo-modules > div, .environment-files > div { grid-template-columns: 1fr; gap: 6px; }
+  .grid-readout { gap: 8px; }
+  .grid-readout dd { font-size: 17px; white-space: nowrap; }
+}
+
+/* Two prose columns need roughly 300px each to stop headings wrapping to three lines,
+   so they stack earlier than the rest of the phone layout. */
+@media (max-width: 900px) {
+  .working-with-columns { grid-template-columns: 1fr; }
+  .working-with-columns article { padding: 20px 0 0; }
+  .working-with-columns article + article { padding: 20px 0 0; border-left: 0; border-top: 1px solid rgb(var(--accent-rgb) / 30%); }
+  .working-with-heading { flex-wrap: wrap; gap: 4px 16px; }
+  .working-with-columns h3 { margin: 14px 0 10px; font-size: clamp(24px, 5vw, 34px); }
 }

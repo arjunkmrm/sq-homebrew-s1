@@ -84,6 +84,6 @@ export function AgentEnvironment() {
         </div>
       </div>
     </div>
-    <p className="agent-environment-disclaimer">Fixed teaching estimates—not wall time or model pricing. Hazards are safely rejected; no real bank tools are called.</p>
+    <p className="agent-environment-disclaimer">Fixed teaching estimates, not wall time or model pricing. Hazards are safely rejected; no real bank tools are called.</p>
   </section>
 }

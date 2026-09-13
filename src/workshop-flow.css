@@ -148,6 +148,9 @@ main.slide-deck.workshop-app-slide { padding:clamp(28px,5.5vh,64px) clamp(66px,5
   .live-log-scroll { height: auto; min-height: 0; max-height: 60vh; }
 }
 @media (max-width: 820px) {
+  /* workshop-flow.css loads after styles.css, so the app-slide padding has to be
+     overridden here or slides 22, 23 and 25 keep the 66px desktop gutters. */
+  main.slide-deck.workshop-app-slide { padding: 46px 20px calc(84px + env(safe-area-inset-bottom)); }
   .workshop-embedded-slide > h2 { font-size: clamp(30px, 8.4vw, 46px); }
   .live-log-scroll { height: auto; min-height: 0; max-height: 60vh; }
   .embedded-scorer .scorer-results { max-height: none; }
