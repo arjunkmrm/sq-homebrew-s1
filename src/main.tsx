@@ -9,6 +9,7 @@ import { EventViewer } from './viewer/EventViewer'
 import { TransferScorer } from './scoring/TransferScorer'
 import { RunBankTask } from './RunBankTask'
 import { ImproveBaseline, RunChallenge, CompareChallenge } from './WorkshopFinish'
+import { TauBenchHomework } from './TauBenchHomework'
 import { AboutPenrose } from './AboutPenrose'
 import { RunTaskFlow } from './RunTaskFlow'
 import { BankIllustration } from './BankIllustration'
@@ -18,7 +19,7 @@ import type { ViewRun } from './viewer/load-run'
 import './styles.css'
 import './workshop-flow.css'
 
-const pageCount = 25
+const pageCount = 26
 const readPage = () => Math.max(1, Math.min(pageCount, Math.trunc(Number(window.location.hash.slice(1))) || 1))
 const taskAnatomyJsonc = `{
   // Bank records for this run
@@ -163,7 +164,8 @@ function App() {
             <div><h3>Understand the environment</h3><p>Connect states, actions, and rewards in a small RL example.</p></div>
           </li>
           <li>
-            <svg className="goal-icon" viewBox="0 0 50 50" aria-hidden="true"><path d="M7 25c5 3 11 4 18 2V16a9 9 0 0 1 18 0v9l-7 3c-1 10-7 15-16 15S5 37 5 30v-8l2 3Z" /><path d="m43 18 5 3-5 3M14 31c2 5 8 6 13 1" /><circle cx="36.5" cy="16" r="1.7" fill="currentColor" stroke="none" /></svg>
+            {/* Hugeicons `rubber-duck`, MIT; see notices/hugeicons-LICENSE */}
+            <svg className="goal-icon goal-icon-fine" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinejoin="round" d="M4.627 6a4.002 4.002 0 0 1 7.874 1a4 4 0 0 1-1.354 3h5.832C18.357 10 19 8.88 19 7.5c3.5 3.5 2.969 7.5 2.969 7.5c0 3.5-3.469 6-8.969 6H8.99a5.495 5.495 0 0 1-5.49-5.5a5.5 5.5 0 0 1 3.126-4.965A4 4 0 0 1 5.037 9m-.41-3L2.001 7c.19 1 1.063 2 3.035 2m-.409-3l.587.855A1.7 1.7 0 0 1 5.036 9" /><path strokeLinejoin="round" d="M11.001 18h1.5c2.21 0 5-2.79 5-5h-6.5a2.5 2.5 0 0 0 0 5" /><path d="M8.25 6.25h.124m.125 0a.25.25 0 1 0-.5 0a.25.25 0 0 0 .5 0Z" /></svg>
             <div><h3>Evaluate an agent</h3><p>Run banking tasks and verify that the intended outcome happened.</p></div>
           </li>
           <li>
@@ -171,7 +173,7 @@ function App() {
             <div><h3>Write a reward function</h3><p>Score outcomes, trajectories, time, and tokens.</p></div>
           </li>
           <li>
-            <svg className="goal-icon" viewBox="0 0 50 50" aria-hidden="true"><path d="m5 35 9-20 11 6 8-12 12 9" opacity=".22"/><path d="m5 35 10-7 11 3 9-10 10-3"/><circle cx="5" cy="35" r="2.5"/><circle cx="15" cy="28" r="2.5"/><circle cx="26" cy="31" r="2.5"/><circle cx="35" cy="21" r="2.5"/><circle cx="45" cy="18" r="3.5"/></svg>
+            <svg className="goal-icon" viewBox="0 0 50 50" aria-hidden="true"><path d="m7 36 11-8 10 5 15-16" /><circle cx="43" cy="17" r="3" fill="currentColor" stroke="none" /></svg>
             <div><h3>Improve your agent</h3><p>Change its behavior, run all 10 tasks, and compare scores.</p></div>
           </li>
         </ol>
@@ -394,6 +396,7 @@ function App() {
       {page === 23 && <ImproveBaseline />}
       {page === 24 && <RunChallenge />}
       {page === 25 && <CompareChallenge />}
+      {page === 26 && <TauBenchHomework />}
       <nav className="slide-navigation" aria-label="Slide navigation" data-slide-navigation>
         <button type="button" onClick={() => goToPage(page - 1)} disabled={page === 1} aria-label="Previous slide">
           <span aria-hidden="true">←</span>
